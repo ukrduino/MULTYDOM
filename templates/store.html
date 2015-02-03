@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{#{% load staticfiles %}#}
+{#{% load bootstrap3 %}#}
+
+{% block store %}
+{#    <div class="row">#}
+{#        <div class="col-lg-8 panels" id="items">#}
+{#        <div class="row" id="selection_title"><p>{{ request.session.selection_type }}</p></div>#}
+{#            {% for coffe in products %}#}
+{#                <div class="col-lg-3" id="product">#}
+{#                    <h4 id="product_title"><strong>{{ coffe.title }}</strong></h4>#}
+{#                    <p style="text-align: center"><img src="http://127.0.0.1:8000/{{ coffe.image }}" alt="{{ coffe.title }}" height="150"></p>#}
+{#                    <h4 id="product_price"><strong>{{ coffe.product_current_price }} грн</strong></h4>#}
+{#                    <p style="text-align: center">#}
+{#                        <a href="{{ coffe.pk }}" class="btn btn-info">Info</a>#}
+{#                        <a href="{% url 'add_main' coffe.id %}" class="btn btn-success">Купить</a>#}
+{#                    </p>#}
+{#                </div>#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#        <div class="col-lg-3 panels" id="cart">#}
+{#            {% block cart %}#}
+{#                <div class="row">#}
+{#                    <h3 style='text-align: center'>Ваша корзина  <img src="{% static "cup.png" %}" alt="cup" height="50"></h3>#}
+{#                    {% if not request.session.cart_qwt_of_prods%}#}
+{#                         <h3> пуста</h3>#}
+{#                    {% else %}#}
+{##}
+{#                        {% for key, value in request.session.grouped_prods_in_cart.items %}#}
+{#                            <div class="row">#}
+{#                                <div style='text-align: left; padding-right: 10px' class="col-lg-6">#}
+{#                                    {{ key }}#}
+{#                                </div>#}
+{#                                <div style='text-align: center' class="col-lg-2">#}
+{#                                    {{ value }}#}
+{#                                </div>#}
+{#                                <div style='text-align: center; font-size: 12px' class="col-lg-4">#}
+{#                                    <a href="{% url "rem" key %}" class="btn btn-sm btn-danger"><strong>-</strong></a>#}
+{#                                    <a href="{% url "add" key %}" class="btn btn-sm btn-success"><strong>+</strong></a>#}
+{#                                </div>#}
+{#                            </div>#}
+{##}
+{#                        {% endfor %}#}
+{#                        <div class="row">#}
+{#                            <div style='text-align: left; padding: 30px ' class="col-lg-12"><strong>Общая сумма заказа: {{ request.session.cart_cost }} грн.</strong></div>#}
+{#                            <p><a href="{% url "my_cart" %}" class="btn btn-success"><strong>Оформить заказ!</strong></a></p>#}
+{#                        </div>#}
+{##}
+{#                    {% endif %}#}
+{##}
+{#                        {{ request.session.cart_prods }}#}
+{#                        {% for coffe in cart_objects %}#}
+{#                            <div class="col-lg-12">#}
+{#                                <h4><strong>{{ coffe.title }} - </strong></h4>#}
+{#                            </div>#}
+{#                        {% endfor %}#}
+{#                </div>#}
+{#            {% endblock %}#}
+{#        </div>#}
+{#      </div>#}
+{##}
+{##}
+{##}
+{##}
+
+{% endblock %}
