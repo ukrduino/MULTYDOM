@@ -1,66 +1,86 @@
 {% extends 'base.html' %}
-{#{% load staticfiles %}#}
+{% load staticfiles %}
 {#{% load bootstrap3 %}#}
 
 {% block store %}
-{#    <div class="row">#}
-{#        <div class="col-lg-8 panels" id="items">#}
-{#        <div class="row" id="selection_title"><p>{{ request.session.selection_type }}</p></div>#}
-{#            {% for coffe in products %}#}
-{#                <div class="col-lg-3" id="product">#}
-{#                    <h4 id="product_title"><strong>{{ coffe.title }}</strong></h4>#}
-{#                    <p style="text-align: center"><img src="http://127.0.0.1:8000/{{ coffe.image }}" alt="{{ coffe.title }}" height="150"></p>#}
-{#                    <h4 id="product_price"><strong>{{ coffe.product_current_price }} грн</strong></h4>#}
-{#                    <p style="text-align: center">#}
-{#                        <a href="{{ coffe.pk }}" class="btn btn-info">Info</a>#}
-{#                        <a href="{% url 'add_main' coffe.id %}" class="btn btn-success">Купить</a>#}
-{#                    </p>#}
-{#                </div>#}
-{#            {% endfor %}#}
-{#        </div>#}
-{#        <div class="col-lg-3 panels" id="cart">#}
-{#            {% block cart %}#}
-{#                <div class="row">#}
-{#                    <h3 style='text-align: center'>Ваша корзина  <img src="{% static "cup.png" %}" alt="cup" height="50"></h3>#}
-{#                    {% if not request.session.cart_qwt_of_prods%}#}
-{#                         <h3> пуста</h3>#}
-{#                    {% else %}#}
-{##}
-{#                        {% for key, value in request.session.grouped_prods_in_cart.items %}#}
-{#                            <div class="row">#}
-{#                                <div style='text-align: left; padding-right: 10px' class="col-lg-6">#}
-{#                                    {{ key }}#}
-{#                                </div>#}
-{#                                <div style='text-align: center' class="col-lg-2">#}
-{#                                    {{ value }}#}
-{#                                </div>#}
-{#                                <div style='text-align: center; font-size: 12px' class="col-lg-4">#}
-{#                                    <a href="{% url "rem" key %}" class="btn btn-sm btn-danger"><strong>-</strong></a>#}
-{#                                    <a href="{% url "add" key %}" class="btn btn-sm btn-success"><strong>+</strong></a>#}
-{#                                </div>#}
-{#                            </div>#}
-{##}
-{#                        {% endfor %}#}
-{#                        <div class="row">#}
-{#                            <div style='text-align: left; padding: 30px ' class="col-lg-12"><strong>Общая сумма заказа: {{ request.session.cart_cost }} грн.</strong></div>#}
-{#                            <p><a href="{% url "my_cart" %}" class="btn btn-success"><strong>Оформить заказ!</strong></a></p>#}
-{#                        </div>#}
-{##}
-{#                    {% endif %}#}
-{##}
-{#                        {{ request.session.cart_prods }}#}
-{#                        {% for coffe in cart_objects %}#}
-{#                            <div class="col-lg-12">#}
-{#                                <h4><strong>{{ coffe.title }} - </strong></h4>#}
-{#                            </div>#}
-{#                        {% endfor %}#}
-{#                </div>#}
-{#            {% endblock %}#}
-{#        </div>#}
-{#      </div>#}
-{##}
-{##}
-{##}
-{##}
+    <div class="row">
+        <div class="col-lg-2" id="groupPanel">
+            <ul class="nav nav-pills nav-stacked">
+                <li><a href="#">Люстры</a></li>
+                <li><a href="#">Светильникик</a></li>
+                <li><a href="#">Лампочки</a></li>
+                <li><a href="#">Фены</a></li>
+                <li><a href="#">Электро-чайники</a></li>
+                <li><a href="#">Электровибраторы</a></li>
+                <li><a href="#">Электрошокеры</a></li>
+                <li><a href="#">Постельное белье</a></li>
+                <li><a href="#">Кухонные пренадлежности</a></li>
+                <li><a href="#">Полотенца</a></li>
+                <li><a href="#">УЦЕНКА</a></li>
 
+            </ul>
+        </div>
+        <div class="col-lg-10" id="prodPanel">
+            <div class="row">
+               <div class="col-lg-3">
+                  <div class="thumbnail product">
+                      <img src={%static '1.jpg'%}>
+                      <div class="caption">
+                        <h3>ФУРНИТУРА</h3>
+                        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                        <p class="price">Цена: 15 грн </p>
+                        <p><a href="#" class="btn btn-primary" role="button">Подробнее</a> <a href="#" class="btn btn-success" role="button">Купить</a></p>
+                      </div>
+                  </div>
+               </div>
+
+               <div class="col-lg-3">
+                  <div class="thumbnail product">
+                      <img class="productImg" src={%static '2.jpg'%}>
+                      <div class="caption">
+                        <h3>СКОВОРОДКА</h3>
+                        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                        <p class="price">Цена: 255 грн </p>
+                          <p><a href="#" class="btn btn-primary" role="button">Подробнее</a> <a href="#" class="btn btn-success" role="button">Купить</a></p>
+                      </div>
+                  </div>
+              </div>
+               <div class="col-lg-3">
+                  <div class="thumbnail product">
+                      <img src={%static '3.jpg'%}>
+                      <div class="caption">
+                        <h3>WOK</h3>
+                        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                        <p class="price">Цена: 555 грн </p>
+                          <p><a href="#" class="btn btn-primary" role="button">Подробнее</a> <a href="#" class="btn btn-success" role="button">Купить</a></p>
+                      </div>
+                  </div>
+                </div>
+               <div class="col-lg-3">
+                  <div class="thumbnail product">
+                      <div class="productImg">
+                        <img class="productImg" src={%static '4.jpg'%}>
+                      </div>
+                      <div class="caption">
+                        <h3>ПОДУШЕЧКА</h3>
+                        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                        <p class="price">Цена: 365 грн </p>
+                        <p><a href="#" class="btn btn-primary" role="button">Подробнее</a> <a href="#" class="btn btn-success" role="button">Купить</a></p>
+                      </div>
+                  </div>
+              </div>
+               <div class="col-lg-3">
+                  <div class="thumbnail product">
+                      <img class="productImg" src={%static '5.jpg'%}>
+                      <div class="caption">
+                        <h3>ПОЛОТЕНЕЧКО</h3>
+                        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                        <p class="price">Цена: 312 грн </p>
+                        <p><a href="#" class="btn btn-primary" role="button">Подробнее</a> <a href="#" class="btn btn-success" role="button">Купить</a></p>
+                      </div>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

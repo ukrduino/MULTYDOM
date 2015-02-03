@@ -1,0 +1,26 @@
+#groupPanel{
+    /*background-color: green;*/
+    /*height: 200px;*/
+}
+
+#prodPanel{
+    /*background-color: cadetblue;*/
+    /*height: 200px;*/
+}
+.product{
+    /*height: 200px;*/
+    width: 242px;
+
+}
+.productImg{
+    width: 232px;
+    height: 215px;
+}
+.price{
+    color: red;
+    font-size: 16px;
+    text-align: right;
+}
+#brand{
+    height: 50px;
+}

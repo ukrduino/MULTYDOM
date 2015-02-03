@@ -2,7 +2,8 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+# comment on pythonanywhere
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'static/products'))
 
 SECRET_KEY = 'ir2u0zd7gpxfad@d5eocvwdn0ulmb@9*k)^4*whtupzyo$qcca'
 
@@ -25,7 +26,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'store',
-    # 'debug_toolbar',
     # 'cart',
     # 'bootstrap3',
     # 'captcha',
