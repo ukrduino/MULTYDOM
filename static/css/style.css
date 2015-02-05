@@ -1,26 +1,57 @@
+html {
+  background: url(../bg1.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  margin-top: 6%; /* Отступ сверху */
+  margin-bottom: 5%;
+}
+body {
+    background: rgba(0,0,0,0);
+}
+
+
+.nav-tabs.nav-justified>li>a,
+.nav-tabs.nav-stacked>li>a {
+    background: rgba(92, 0, 6, 0.61);
+    color: #ffffff;
+    margin: 3%;
+}
+
+
+#baseWindow{
+    background: rgba(211, 93, 123, 0);
+    height: 500px;
+}
+
+#carousel .carousel-inner{
+    height: 450px;
+}
+
+#thumbnail > img{
+    background: rgba(0,0,0,0);
+    height: 160px;
+    width: 160px;
+    margin: 5%;
+    border-radius: 5px;
+
+}
+
+#thumbnailCol{
+    padding-left: 0;
+    padding-right: 0
+;
+}
+
 #groupPanel{
-    /*background-color: green;*/
-    /*height: 200px;*/
+    padding-left: 0;
+    padding-right: 0
 }
 
 #prodPanel{
-    /*background-color: cadetblue;*/
-    /*height: 200px;*/
+        padding-left: 0;
+    padding-right: 0
 }
-.product{
-    /*height: 200px;*/
-    width: 242px;
 
-}
-.productImg{
-    width: 232px;
-    height: 215px;
-}
-.price{
-    color: red;
-    font-size: 16px;
-    text-align: right;
-}
-#brand{
-    height: 50px;
-}
+

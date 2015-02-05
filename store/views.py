@@ -24,16 +24,22 @@ from django.shortcuts import render_to_response, redirect, HttpResponse
 #     return render_to_response('detail.html', args, context_instance=RequestContext(request))
 #
 
-def home(request):
+def actions(request):
+    return render_to_response('actions.html', )
 
-    # args = dict()
-    # args['manufacturers'] = Manufacturer.objects.all()
-    # args['products'] = Coffe.objects.all()
-    # request.session['selection_type'] = "Все товары магазина"
+def store(request):
+    return render_to_response('store.html',)
 
-    return render_to_response('store.html',
-                              # args, context_instance=RequestContext(request)
-    )
+def paymentDelivery(request):
+    return render_to_response('paymentDelivery.html',)
+
+
+def docs(request):
+    return render_to_response('docs.html',)
+
+
+def about(request):
+    return render_to_response('about.html',)
 
 
 # def add_comment(request, product_id=1):
@@ -67,7 +73,7 @@ def home(request):
 #     manufacturer = Manufacturer.objects.get(id=man_id)
 #     request.session['selection_type'] = "Производитель " + manufacturer.title
 #
-#     return render_to_response('store.html', args, context_instance=RequestContext(request))
+#     return render_to_response('actions.html', args, context_instance=RequestContext(request))
 #
 #
 # def filter2(request, sort_id):
@@ -83,7 +89,7 @@ def home(request):
 #     args['products'] = Coffe.objects.filter(**kwargs)
 #     request.session['selection_type'] = "Сорт кофе " + f[int(sort_id)]
 #
-#     return render_to_response('store.html', args, context_instance=RequestContext(request))
+#     return render_to_response('actions.html', args, context_instance=RequestContext(request))
 #
 #
 # def filter3(request, roast):
@@ -97,7 +103,7 @@ def home(request):
 #     args['products'] = Coffe.objects.filter(**kwargs)
 #     request.session['selection_type'] = "Обжарка " + roast
 #
-#     return render_to_response('store.html', args, context_instance=RequestContext(request))
+#     return render_to_response('actions.html', args, context_instance=RequestContext(request))
 #
 #
 # from django.views.static import serve

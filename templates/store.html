@@ -3,9 +3,8 @@
 {#{% load bootstrap3 %}#}
 
 {% block store %}
-    <div class="row">
-        <div class="col-lg-2" id="groupPanel">
-            <ul class="nav nav-pills nav-stacked">
+  <div class="col-lg-3" id="groupPanel">
+            <ul class="nav nav-tabs nav-stacked">
                 <li><a href="#">Люстры</a></li>
                 <li><a href="#">Светильникик</a></li>
                 <li><a href="#">Лампочки</a></li>
@@ -16,71 +15,44 @@
                 <li><a href="#">Постельное белье</a></li>
                 <li><a href="#">Кухонные пренадлежности</a></li>
                 <li><a href="#">Полотенца</a></li>
-                <li><a href="#">УЦЕНКА</a></li>
+
 
             </ul>
         </div>
-        <div class="col-lg-10" id="prodPanel">
-            <div class="row">
-               <div class="col-lg-3">
-                  <div class="thumbnail product">
-                      <img src={%static '1.jpg'%}>
-                      <div class="caption">
-                        <h3>ФУРНИТУРА</h3>
-                        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                        <p class="price">Цена: 15 грн </p>
-                        <p><a href="#" class="btn btn-primary" role="button">Подробнее</a> <a href="#" class="btn btn-success" role="button">Купить</a></p>
-                      </div>
-                  </div>
-               </div>
+        <div class="col-lg-9" id="prodPanel">
 
-               <div class="col-lg-3">
-                  <div class="thumbnail product">
-                      <img class="productImg" src={%static '2.jpg'%}>
-                      <div class="caption">
-                        <h3>СКОВОРОДКА</h3>
-                        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                        <p class="price">Цена: 255 грн </p>
-                          <p><a href="#" class="btn btn-primary" role="button">Подробнее</a> <a href="#" class="btn btn-success" role="button">Купить</a></p>
-                      </div>
-                  </div>
-              </div>
-               <div class="col-lg-3">
-                  <div class="thumbnail product">
-                      <img src={%static '3.jpg'%}>
-                      <div class="caption">
-                        <h3>WOK</h3>
-                        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                        <p class="price">Цена: 555 грн </p>
-                          <p><a href="#" class="btn btn-primary" role="button">Подробнее</a> <a href="#" class="btn btn-success" role="button">Купить</a></p>
-                      </div>
-                  </div>
+                <div class="col-lg-3" id="thumbnailCol">
+                    <a href="#" id="thumbnail">
+                        <img src={%static 'p1.jpg'%}>
+                    </a>
                 </div>
-               <div class="col-lg-3">
-                  <div class="thumbnail product">
-                      <div class="productImg">
-                        <img class="productImg" src={%static '4.jpg'%}>
-                      </div>
-                      <div class="caption">
-                        <h3>ПОДУШЕЧКА</h3>
-                        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                        <p class="price">Цена: 365 грн </p>
-                        <p><a href="#" class="btn btn-primary" role="button">Подробнее</a> <a href="#" class="btn btn-success" role="button">Купить</a></p>
-                      </div>
-                  </div>
-              </div>
-               <div class="col-lg-3">
-                  <div class="thumbnail product">
-                      <img class="productImg" src={%static '5.jpg'%}>
-                      <div class="caption">
-                        <h3>ПОЛОТЕНЕЧКО</h3>
-                        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                        <p class="price">Цена: 312 грн </p>
-                        <p><a href="#" class="btn btn-primary" role="button">Подробнее</a> <a href="#" class="btn btn-success" role="button">Купить</a></p>
-                      </div>
-                  </div>
-              </div>
-            </div>
-        </div>
-    </div>
+                <div class="col-lg-3" id="thumbnailCol">
+                    <a href="#" id="thumbnail">
+                        <img src={%static 'p2.jpg'%}>
+                    </a>
+                </div>
+                <div class="col-lg-3" id="thumbnailCol">
+                    <a href="#" id="thumbnail">
+                        <img src={%static 'p3.jpg'%}>
+                    </a>
+                </div>
+                <div class="col-lg-3" id="thumbnailCol">
+                    <a href="#" id="thumbnail">
+                        <img src={%static 'p4.jpg'%}>
+                    </a>
+                </div>
+                <div class="col-lg-3" id="thumbnailCol">
+                    <a href="#" id="thumbnail">
+                        <img src={%static 'p5.jpg'%}>
+                    </a>
+                </div>
+                <div class="col-lg-3" id="thumbnailCol">
+                    <a href="#" id="thumbnail">
+                        <img src={%static 'p6.jpg'%}>
+                    </a>
+                </div>
+           </div>
+
+
+    
 {% endblock %}
