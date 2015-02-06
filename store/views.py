@@ -1,12 +1,13 @@
 from django.shortcuts import render_to_response, redirect, HttpResponse
-# from store.models import *  # импортируем модели
+from store.models import *  # импортируем модели
 # #from django.core.exceptions import ObjectDoesNotExist  # ошибка - объект не существует
 # #from django.http.response import Http404  # вывод страницы 404
 # from store.forms import CommentForm
 # from django.core.context_processors import csrf  # защита данных передаваемых из форм
 # #from django.contrib import auth   # модуль авторизации
-# from django.template import RequestContext
+from django.template import RequestContext
 # from django.contrib import messages
+from MULTYDOM.localSettings import SITE_ADDR
 
 
 # def coffe_detail(request, product_id=1):
@@ -24,11 +25,17 @@ from django.shortcuts import render_to_response, redirect, HttpResponse
 #     return render_to_response('detail.html', args, context_instance=RequestContext(request))
 #
 
+
 def actions(request):
     return render_to_response('actions.html', )
 
+
 def store(request):
-    return render_to_response('store.html',)
+    args = dict()
+    args['categories'] = Category.objects.all()
+    args['SITE_ADDR'] = SITE_ADDR
+
+    return render_to_response('store.html', args, context_instance=RequestContext(request))
 
 def paymentDelivery(request):
     return render_to_response('paymentDelivery.html',)

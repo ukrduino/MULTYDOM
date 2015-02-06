@@ -5,53 +5,21 @@
 {% block store %}
   <div class="col-lg-3" id="groupPanel">
             <ul class="nav nav-tabs nav-stacked">
-                <li><a href="#">Люстры</a></li>
-                <li><a href="#">Светильникик</a></li>
-                <li><a href="#">Лампочки</a></li>
-                <li><a href="#">Фены</a></li>
-                <li><a href="#">Электро-чайники</a></li>
-                <li><a href="#">Электровибраторы</a></li>
-                <li><a href="#">Электрошокеры</a></li>
-                <li><a href="#">Постельное белье</a></li>
-                <li><a href="#">Кухонные пренадлежности</a></li>
-                <li><a href="#">Полотенца</a></li>
-
-
+               {% for category in categories %}
+                    <li><a href="#">{{ category.title}}</a></li>
+               {% endfor %}
             </ul>
         </div>
         <div class="col-lg-9" id="prodPanel">
+            {% for category in categories %}
+                <div class="col-lg-3" id="thumbnailCol">
+                    <a href="#" id="thumbnail">
+                        <img src="{{ SITE_ADDR }}/{{ category.image }}" alt="{{ category.title }}">
+                    </a>
+                </div>
 
-                <div class="col-lg-3" id="thumbnailCol">
-                    <a href="#" id="thumbnail">
-                        <img src={%static 'p1.jpg'%}>
-                    </a>
-                </div>
-                <div class="col-lg-3" id="thumbnailCol">
-                    <a href="#" id="thumbnail">
-                        <img src={%static 'p2.jpg'%}>
-                    </a>
-                </div>
-                <div class="col-lg-3" id="thumbnailCol">
-                    <a href="#" id="thumbnail">
-                        <img src={%static 'p3.jpg'%}>
-                    </a>
-                </div>
-                <div class="col-lg-3" id="thumbnailCol">
-                    <a href="#" id="thumbnail">
-                        <img src={%static 'p4.jpg'%}>
-                    </a>
-                </div>
-                <div class="col-lg-3" id="thumbnailCol">
-                    <a href="#" id="thumbnail">
-                        <img src={%static 'p5.jpg'%}>
-                    </a>
-                </div>
-                <div class="col-lg-3" id="thumbnailCol">
-                    <a href="#" id="thumbnail">
-                        <img src={%static 'p6.jpg'%}>
-                    </a>
-                </div>
-           </div>
+            {% endfor %}
+        </div>
 
 
     

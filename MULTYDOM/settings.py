@@ -26,6 +26,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'store',
+    'imagekit',  #http://django-imagekit.readthedocs.org/en/latest/
     # 'cart',
     # 'bootstrap3',
     # 'captcha',
@@ -74,6 +75,8 @@ STATIC_URL = '/static/'
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR,  'templates'),
 )
+
+# IMAGE_UPLOAD_DIR = os.path.join(BASE_DIR, 'static/products')
 
 # # https://github.com/django-admin-bootstrapped/django-admin-bootstrapped
 # DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'

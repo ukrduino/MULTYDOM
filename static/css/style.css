@@ -1,5 +1,5 @@
 html {
-  background: url(../bg2.jpg) no-repeat center center fixed;
+  background: url(../bg1.jpg) no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -22,11 +22,11 @@ body {
 
 #baseWindow{
     background: rgba(211, 93, 123, 0);
-    height: 500px;
+    height: 650px;
 }
 
 #carousel .carousel-inner{
-    height: 450px;
+    height: auto;
 }
 
 #thumbnail > img{
@@ -50,7 +50,7 @@ body {
 }
 
 #prodPanel{
-        padding-left: 0;
+    padding-left: 0;
     padding-right: 0
 }
 
@@ -59,10 +59,22 @@ body {
     background: rgba(0,0,0,0);
     border: 0;
 
-
-
 }
 #bottomText{
     text-align: right;
     margin: 0;
+    color: #ffffff
+}
+
+#topText{
+
+    color: #F3E1CB
+}
+
+.carousel.slide{
+    padding: 10px;
+}
+
+#actionWindow{
+    margin-top: 100px;
 }
