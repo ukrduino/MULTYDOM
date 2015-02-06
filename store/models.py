@@ -7,10 +7,16 @@ from imagekit import ImageSpec
 from imagekit.processors import ResizeToFill
 
 
+# TODO создание Thumbnail
 class Thumbnail(ImageSpec):
     processors = [ResizeToFill(100, 100)]
     format = 'JPEG'
     options = {'quality': 60}
+
+# TODO удаление картинки при удалении файла и удаление картинки при удалении картинки или просто удаление картинок непривязанных к объектам
+# http://stackoverflow.com/a/16443037/3177550
+# http://timonweb.com/cleanup-files-and-images-on-model-delete-in-django
+# http://tiku.io/questions/133317/replacing-a-django-image-doesnt-delete-original
 
 
 # функция Переопределение имени загружаемого файла.  TODO вынести в утилиты
@@ -31,8 +37,6 @@ class MainClass(models.Model):  # абстрактный класс имеет �
     slug = models.CharField(max_length=100, verbose_name='URL')
     image = models.ImageField(upload_to=make_upload_path, default="", verbose_name='Изображение')
 
-
-
 # при обращении к экземпляру класса возвращает его имя - title ( в админке использует __str__, в др местах __unicode__)
     def __str__(self):
         return self.title
@@ -40,6 +44,7 @@ class MainClass(models.Model):  # абстрактный класс имеет �
     def __unicode__(self):
         return self.title
 
+# TODO Убрать после настроки создания Thumbnail
 # функция формирования пути к картинке объекта Product для отображения в админке
     def pic(self):
         if self.image:
