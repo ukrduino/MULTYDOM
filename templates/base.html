@@ -21,47 +21,59 @@
   </head>
 
   <body>
-  <nav class="navbar navbar-default navbar-fixed-bottom">
-      <div class="container">
-
-            <p id="bottomText">Made by Romaniuk Sergey - 2015</p>
-
-      </div>
-  </nav>
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-
-            <h1 id="topText">MultyDOM - лучшие товары для дома!!!</h1>
-
-      </div>
-  </nav>
-    <div class="container" id="baseContainer">
-      <div class="row">
+{#    <nav class="navbar navbar-default navbar-fixed-top">#}
+{#      <div class="container">#}
+{##}
+{#            <h1 id="topText">MultyDOM - лучшие товары для дома!!!</h1>#}
+{##}
+{#      </div>#}
+{#  </nav>#}
+<div class="container">
+    <div class="row">
+        <h1 id="topText">MultyDOM - лучшие товары для дома!!!</h1>
         <div class="col-lg-10 col-lg-offset-1" id="baseWindow">
 
             <ul class="nav nav-tabs nav-justified" >
                     <li><a href="{% url 'actions' %}">Акции</a></li>
-                    <li><a href="{% url 'store' %}">Товары</a></li>
+                    <li><a href="{% url 'categories' %}">Товары</a></li>
                     <li><a href="{% url 'paymentDelivery' %}">Оплата/Доставка</a></li>
                     <li><a href="{% url 'docs' %}">Сертификаты</a></li>
                     <li><a href="{% url 'about' %}">О нас</a></li>
+                    <li><a href="#">Корзина</a></li>
             </ul>
             {% block actions %}{% endblock %}
-            {% block store %}{% endblock %}
+            {% block categories %}{% endblock %}
+            {% block product %}{% endblock %}
+            {% block products %}{% endblock %}
             {% block paymentDelivery %}{% endblock %}
             {% block docs %}{% endblock %}
             {% block about %}{% endblock %}
+            {% block cart %}{% endblock %}
+
         </div>
-      </div>
     </div>
+</div>
 
+<nav class="navbar navbar-default navbar-fixed-bottom">
+    <div class="container">
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <!-- Bootstrap core JavaScript
-    ================================================== -->
+        <p id="bottomText">Made by Romaniuk Sergey - 2015</p>
+
+    </div>
+</nav>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+{#http://getbootstrap.com/javascript/#tooltips#}
+<script>
+    $(function () {$('[data-toggle="tooltip"]').tooltip()})
+</script>
+
 
   </body>
 </html>

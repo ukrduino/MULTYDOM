@@ -9,35 +9,33 @@ from django.template import RequestContext
 # from django.contrib import messages
 from MULTYDOM.localSettings import SITE_ADDR
 
+args = dict()
+args['categories'] = Category.objects.all()
+args['SITE_ADDR'] = SITE_ADDR
 
-# def coffe_detail(request, product_id=1):
-#     comment_form = CommentForm
-#     args = {}
-#     args.update(csrf(request))
-#     product = Coffe.objects.get(id=product_id)
-#     args['product'] = product
-#     args['manufacturer'] = product.product_manuf
-#     args['manufacturers'] = Manufacturer.objects.all()
-#     args['comments'] = Comment.objects.filter(comment_product_id=product_id)
-#     args['form'] = comment_form
-# #    args['username'] = auth.get_user(request).username
-# # В шаблон lustra_detail.html передаются данные одним словарем args и контекст(с сессией)
-#     return render_to_response('detail.html', args, context_instance=RequestContext(request))
-#
+
+def product(request, product_id=1):
+    args['product'] = Product.objects.get(id=product_id)
+
+    return render_to_response('product.html', args, context_instance=RequestContext(request))
 
 
 def actions(request):
     return render_to_response('actions.html', )
 
 
-def store(request):
-    args = dict()
-    args['categories'] = Category.objects.all()
-    args['SITE_ADDR'] = SITE_ADDR
+def categories(request):
+    return render_to_response('categories.html', args, context_instance=RequestContext(request))
 
-    return render_to_response('store.html', args, context_instance=RequestContext(request))
+
+def category_filter(request, category_id):
+    args['products'] = Product.objects.filter(productCategory_id=category_id)
+
+    return render_to_response('products.html', args, context_instance=RequestContext(request))
+
 
 def paymentDelivery(request):
+
     return render_to_response('paymentDelivery.html',)
 
 
@@ -48,6 +46,33 @@ def docs(request):
 def about(request):
     return render_to_response('about.html',)
 
+
+# def products(request):
+#     return render_to_response('products.html',)
+#
+#
+# def filter3(request, roast):
+#
+#     args = dict()
+#     kwargs = dict()
+#
+#     kwargs['product_сoffe_roast'] = roast
+#
+#     args['manufacturers'] = Manufacturer.objects.all()
+#     args['products'] = Coffe.objects.filter(**kwargs)
+#     request.session['selection_type'] = "Обжарка " + roast
+#
+#     return render_to_response('actions.html', args, context_instance=RequestContext(request))
+#
+#
+# from django.views.static import serve
+#
+#
+# def text(request):
+#
+#   f = open("/Users/Sergey/PycharmProjects/SHOP/static/textfile.txt", 'r')
+#
+#   return HttpResponse(f)
 
 # def add_comment(request, product_id=1):
 #     if 'pause' in request.session:
@@ -83,41 +108,4 @@ def about(request):
 #     return render_to_response('actions.html', args, context_instance=RequestContext(request))
 #
 #
-# def filter2(request, sort_id):
-#     # sort_id = sort_id[0]
-#     args = dict()
-#     kwargs = dict()
-#     f = {1: "Робуста",
-#          2: "Арабика",
-#          3: "Робуста+Арабика"}
-#     kwargs['product_сoffe_sort'] = f[int(sort_id)]
-#
-#     args['manufacturers'] = Manufacturer.objects.all()
-#     args['products'] = Coffe.objects.filter(**kwargs)
-#     request.session['selection_type'] = "Сорт кофе " + f[int(sort_id)]
-#
-#     return render_to_response('actions.html', args, context_instance=RequestContext(request))
-#
-#
-# def filter3(request, roast):
-#
-#     args = dict()
-#     kwargs = dict()
-#
-#     kwargs['product_сoffe_roast'] = roast
-#
-#     args['manufacturers'] = Manufacturer.objects.all()
-#     args['products'] = Coffe.objects.filter(**kwargs)
-#     request.session['selection_type'] = "Обжарка " + roast
-#
-#     return render_to_response('actions.html', args, context_instance=RequestContext(request))
-#
-#
-# from django.views.static import serve
-#
-#
-# def text(request):
-#
-#   f = open("/Users/Sergey/PycharmProjects/SHOP/static/textfile.txt", 'r')
-#
-#   return HttpResponse(f)
+

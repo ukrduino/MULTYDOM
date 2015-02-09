@@ -96,12 +96,12 @@ class Product(MainClass):
         verbose_name = 'Товар'  # имя модели в админке в ед ч
         verbose_name_plural = 'Товары'  # имя модели в админке в мн ч
 
-    productText = models.TextField(verbose_name='Описание товара', blank=False)
+    productText = models.TextField(verbose_name='Описание товара', blank=False, max_length=500)
     productDate = models.DateTimeField(auto_now_add=True, verbose_name='Дата размещения', blank=False)
     productDateChange = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
     productCurrentPrice = models.IntegerField(verbose_name='Текущая цена', default=0)
     productPresence = models.BooleanField(verbose_name='В наличии', default=True)
     productForOrder = models.BooleanField(verbose_name='Под заказ', default=False)
     productSize = models.CharField(verbose_name='Размер', blank=True, max_length=100)
-    productManufacturer = models.ForeignKey(Manufacturer, related_name='products')  # производитель товара
-    productCategory = models.ForeignKey(Category, related_name='products')  # производитель товара
+    productManufacturer = models.ForeignKey(Manufacturer)  # производитель товара
+    productCategory = models.ForeignKey(Category)  # производитель товара

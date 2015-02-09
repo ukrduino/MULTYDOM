@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{#{% load bootstrap3 %}#}
+
+{% block products %}
+  <div class="col-lg-3" id="groupPanel">
+            <ul class="nav nav-tabs nav-stacked">
+               {% for category in categories %}
+                    <li><a href="{% url 'category_filter' category.id %}">{{ category.title}}</a></li>
+               {% endfor %}
+            </ul>
+        </div>
+        <div class="col-lg-9" id="prodPanel">
+          {% for prod in products %}
+            <div class="col-lg-4" id="productsListCol">
+                <div class="thumbnail product">
+                    <img src="{{ SITE_ADDR }}/{{ prod.image }}" alt="{{ prod.title }}">
+                    <div class="caption">
+                    <h3>{{ prod.title }}</h3>
+                    <p>{{ prod.productText|truncatechars:100 }}</p>
+                    <p class="price">Цена: {{ prod.productCurrentPrice }} грн </p>
+                    <p><a href="{% url 'product' prod.id %}" class="btn btn-primary" role="button">Подробнее</a> <a href="#" class="btn btn-success" role="button">Купить</a></p>
+                    </div>
+                </div>
+            </div>
+          {% endfor %}
+{#            <div class="col-lg-4" id="productsListCol">#}
+{#                <div class="thumbnail product">#}
+{#                    <img src={%static 'Bergner.png'%}>#}
+{#                    <div class="caption">#}
+{#                    <h3>Bergner BG-6509</h3>#}
+{#                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>#}
+{#                    <p class="price">Цена: 15 грн </p>#}
+{#                    <p><a href="#" class="btn btn-primary" role="button">Подробнее</a> <a href="#" class="btn btn-success" role="button">Купить</a></p>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="col-lg-4" id="productsListCol">#}
+{#                <div class="thumbnail product">#}
+{#                    <img src={%static 'Bergner.png'%}>#}
+{#                    <div class="caption">#}
+{#                    <h3>Bergner BG-6509</h3>#}
+{#                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>#}
+{#                    <p class="price">Цена: 15 грн </p>#}
+{#                    <p><a href="#" class="btn btn-primary" role="button">Подробнее</a> <a href="#" class="btn btn-success" role="button">Купить</a></p>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+
+
+
+        </div>
+
+
+
+{% endblock %}
