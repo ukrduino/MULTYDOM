@@ -6,13 +6,13 @@ from store.models import *  # импортируем модели
 
 
 class ProductAdmin(admin.ModelAdmin):  # класс для перенастройки отображения класса Product в админке
-    prepopulated_fields = {'slug': ('title',)}  # из поля product_title транслитом заполняется
+    prepopulated_fields = {'productSlug': ('productTitle',)}  # из поля product_title транслитом заполняется
                                                                 # поле product_slug
 
-    list_display = ['title', 'productDate', 'productDateChange', 'productCurrentPrice', 'productPresence', 'picS']  # возможность просматривать записи
+    list_display = ['productTitle', 'productDate', 'productDateChange', 'productCurrentPrice', 'productPresence', 'get_thumb']  # возможность просматривать записи
                                                                         # Product в виде таблицы
     list_filter = ['productDate', 'productDateChange', 'productPresence', 'productCategory', 'productManufacturer']  # включение фильтра по датам
-    search_fields = ['title']
+    search_fields = ['productTitle']
 #    filter_horizontal = ('product_category_MTM',)  # Позволяет управлять  категориями в товаре
                                                    # (добавлять, удалять, менять)
 
@@ -29,14 +29,14 @@ class ProductAdmin(admin.ModelAdmin):  # класс для перенастро�
 class ManufacturerAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}  # из поля product_title транслитом заполняется
                                                                 # поле product_slug
-    list_display = ['title', 'picS']
+    list_display = ['title', 'pic']
     search_fields = ['title']
 
 
 class CategoryAdmin(admin.ModelAdmin):  # класс для перенастройки отображения класса Product в админке
     prepopulated_fields = {'slug': ('title',)}  # из поля product_title транслитом заполняется
 
-    list_display = ['title', 'picS']
+    list_display = ['title', 'pic']
 
 
 
@@ -46,3 +46,4 @@ admin.site.register(Product, ProductAdmin)  # регистрация класс�
 # admin.site.register(Order, OrderAdmin)  # регистрация класса Order в админке
 admin.site.register(Manufacturer, ManufacturerAdmin)  # регистрация класса Order в админке
 admin.site.register(Category, CategoryAdmin)
+
