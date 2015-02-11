@@ -1,5 +1,5 @@
 from django.db import models
-from MULTYDOM.localSettings import SITE_ADDR
+from MULTYDOM.settings import SITE_ADDR, STATICFILES_DIRS
 from PIL import Image
 import os
 # for image resizing
@@ -17,7 +17,7 @@ class MainClass(models.Model):  # абстрактный класс имеет �
 
     title = models.CharField(max_length=100, verbose_name='Название', blank=False, unique=True)
     slug = models.CharField(max_length=100, verbose_name='URL')
-    upload_path ='static/other'
+    upload_path = '%s/other' % STATICFILES_DIRS
     image = ProcessedImageField(upload_to=upload_path,
                                 processors=[ResizeToFill(160, 160)],
                                 format='JPEG')
@@ -29,14 +29,23 @@ class MainClass(models.Model):  # абстрактный класс имеет �
     def __unicode__(self):
         return self.title
 
-# функция формирования пути к картинке объекта Product для отображения в админке
     def pic(self):
         if self.image:
-            return '<img src="%s/%s"/>' % (SITE_ADDR, self.image.url)
+            return '%s/%s' % (SITE_ADDR, self.image.url[39:])
         else:
             return '(none)'
+
     pic.short_description = 'Изображение'
     pic.allow_tags = True
+
+# функция формирования пути к картинке объекта Product для отображения в админке
+    def adminPic(self):
+        if self.image:
+            return '<img src="%s/%s"/>' % (SITE_ADDR, self.image.url[39:])
+        else:
+            return '(none)'
+    adminPic.short_description = 'Изображение'
+    adminPic.allow_tags = True
 
     def delete(self, *args, **kwargs):
         self.image.delete(save=False)
@@ -56,7 +65,7 @@ class MainClass(models.Model):  # абстрактный класс имеет �
             #validate dimensions
             img = Image.open(image)
             w, h = img.size
-            if w != 160 or h != 160:
+            if w != h:
                 raise ValidationError(_('Please use an image 160 x 160 pixels'))
 
             #validate content type
@@ -93,7 +102,7 @@ class Category(MainClass):
 # You must create a migration, where you will specify default value for a new field, since you don't want it to be null.
 # If null is not required, simply add null=True and create and run migration.
 
-    parentCategory = models.ForeignKey("Category", blank=True, null=True)
+    parentCategory = models.ForeignKey("Category", blank=True, null=True, verbose_name='Входит в группу')
 
 # http://stackoverflow.com/a/6379556/3177550
 # MainClass._meta.get_field('image').blank = True
@@ -118,8 +127,8 @@ class Product(models.Model):
     productCategory = models.ForeignKey(Category)  # производитель товара
 
 # http://www.mechanicalgirl.com/view/image-resizing-file-uploads-doing-it-easy-way/
-    filepath = 'static/products/'
-    productPhoto_original = ProcessedImageField(upload_to=filepath,
+    upload_path = '%s/products/' % STATICFILES_DIRS
+    productPhoto_original = ProcessedImageField(upload_to=upload_path,
                                                 processors=[ResizeToFill(400, 300)],
                                                 verbose_name='Фото товара формат (выс4*шир3)')
     productPhoto_medium = models.CharField(max_length=255, blank=True, editable=False)
@@ -127,15 +136,16 @@ class Product(models.Model):
 
     # methods to return paths to the thumbnail, medium, and original images
     def get_thumb(self):
-        return '<img src="%s/%s"/>' % (SITE_ADDR, self.productPhoto_thumb)
+        return '<img src="%s/%s"/>' % (SITE_ADDR, self.productPhoto_thumb[39:])
     get_thumb.allow_tags = True
 
     def get_medium(self):
-        return '%s/%s' % (SITE_ADDR, self.productPhoto_medium)
+        return '%s/%s' % (SITE_ADDR, self.productPhoto_medium[39:])
     get_medium.allow_tags = True
 
     def get_original(self):
-        return '%s/%s' % (SITE_ADDR, self.productPhoto_original)
+
+        return '%s/%s' % (SITE_ADDR, self.productPhoto_original.path[39:])
     get_original.allow_tags = True
 
     def delete(self, *args, **kwargs):
@@ -188,13 +198,13 @@ class Product(models.Model):
         im.thumbnail((sizes['medium']['width'], sizes['medium']['height']), Image.ANTIALIAS)
         medname = filename + "_" + str(sizes['medium']['width']) + "x" + str(sizes['medium']['height']) + ".jpg"
         im.save(fullpath + '/' + medname)
-        self.productPhoto_medium = self.filepath + medname
+        self.productPhoto_medium = self.upload_path + medname
 
         # create thumbnail
         im.thumbnail((sizes['thumbnail']['width'], sizes['thumbnail']['height']), Image.ANTIALIAS)
         thumbname = filename + "_" + str(sizes['thumbnail']['width']) + "x" + str(sizes['thumbnail']['height']) + ".jpg"
         im.save(fullpath + '/' + thumbname)
-        self.productPhoto_thumb = self.filepath + thumbname
+        self.productPhoto_thumb = self.upload_path + thumbname
 
         super(Product, self).save(*args, **kwargs)
 
@@ -206,13 +216,17 @@ class Product(models.Model):
 
     def clean(self):
         image = self.productPhoto_original
+        print(image)
 
         if image:
             #validate dimensions
             img = Image.open(image)
             w, h = img.size
-            if w != 400 or h != 300:
-                raise ValidationError(_('Please use an image 400 x 300 pixels'))
+            img_asp_ratio = float(format(w/h, '.2f'))
+            my_asp_ratio = float(format(400/300, '.2f'))
+            if img_asp_ratio != my_asp_ratio and (w < 400 or h < 300):
+                raise ValidationError(_('Please use an image with 1.33 aspect ratio and size not less than 400 x 300 '
+                                        'pixels, image will be autoresized'))
 
             #validate content type
             im_format = img.format

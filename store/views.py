@@ -7,7 +7,7 @@ from store.models import *  # импортируем модели
 # #from django.contrib import auth   # модуль авторизации
 from django.template import RequestContext
 # from django.contrib import messages
-from MULTYDOM.localSettings import SITE_ADDR
+from MULTYDOM.settings import SITE_ADDR
 
 args = dict()
 args['categories'] = Category.objects.all()

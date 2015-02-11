@@ -14,7 +14,7 @@
             {% for category in categories %}
                 <div class="col-lg-3" id="thumbnailCol">
                     <a href="{% url 'category_filter' category.id %}" id="thumbnail">
-                        <img src="{{ SITE_ADDR }}/{{ category.image }}" alt="{{ category.title }}" data-toggle="tooltip" data-placement="top" title="{{ category.title }}">
+                        <img src="{{ category.pic }}" alt="{{ category.title }}" data-toggle="tooltip" data-placement="top" title="{{ category.title }}">
                     </a>
                 </div>
 

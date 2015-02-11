@@ -3,7 +3,11 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # comment on pythonanywhere
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'static/products'))
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+SITE_ADDR = "http://127.0.0.1:8000" # менять на "http://multydom.pythonanywhere.com/"
+LOCAL = True
+
+
 
 SECRET_KEY = 'ir2u0zd7gpxfad@d5eocvwdn0ulmb@9*k)^4*whtupzyo$qcca'
 
@@ -27,9 +31,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'store',
     'imagekit',  #http://django-imagekit.readthedocs.org/en/latest/
-    'cart',
+    # 'cart',
     # 'bootstrap3',
-    'captcha',
+    # 'captcha',
     'debug_toolbar',
 )
 
@@ -78,8 +82,6 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR,  'templates'),
 )
 
-# IMAGE_UPLOAD_DIR = os.path.join(BASE_DIR, 'static/products')
-
 # https://github.com/django-admin-bootstrapped/django-admin-bootstrapped
 DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'
 #
@@ -92,8 +94,8 @@ DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer
 TEMPLATE_CONTEXT_PROCESSORS = (  # http://stackoverflow.com/questions/2551933/
                                  # django-accessing-session-variables-from-within-a-template
     'django.core.context_processors.request',
-#    'django.core.context_processors.media',
-#    'django.core.context_processors.static',
+    # 'django.core.context_processors.media',
+    # 'django.core.context_processors.static',
     'django.contrib.messages.context_processors.messages',
     'django.contrib.auth.context_processors.auth'
 )
@@ -108,9 +110,9 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # DEFAULT_FROM_EMAIL = "Alex.Vlasov.ukr@gmail.com"
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 #
-#CAPTCHA_FONT_SIZE ='30'
-CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
-CAPTCHA_LETTER_ROTATION = (-5, 5)
-CAPTCHA_BACKGROUND_COLOR = 'white'
-CAPTCHA_FOREGROUND_COLOR = '#000'
-CAPTCHA_NOISE_FUNCTIONS = ()
+##CAPTCHA_FONT_SIZE ='30'
+# CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
+# CAPTCHA_LETTER_ROTATION = (-5, 5)
+# CAPTCHA_BACKGROUND_COLOR = 'white'
+# CAPTCHA_FOREGROUND_COLOR = '#000'
+# CAPTCHA_NOISE_FUNCTIONS = ()
