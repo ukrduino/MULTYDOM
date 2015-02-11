@@ -1,15 +1,16 @@
 from django.db import models
 from MULTYDOM.localSettings import SITE_ADDR
 from PIL import Image
-import sys, os
+import os
+# for image resizing
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
-
+# for validation
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ValidationError
 
 
-class MainClass(models.Model):  # абстрактный класс имеет имя и картинку
+class MainClass(models.Model):  # абстрактный класс имеет имя и картинку 160*160
     class Meta:
         abstract = True
         app_label = 'Магазин'
@@ -47,6 +48,26 @@ class MainClass(models.Model):  # абстрактный класс имеет �
             if old.image.name and (not self.image._committed or not self.image.name):
                 old.image.delete(save=False)
         super().save(*args, **kwargs)
+
+    def clean(self):
+        image = self.image
+
+        if image:
+            #validate dimensions
+            img = Image.open(image)
+            w, h = img.size
+            if w != 160 or h != 160:
+                raise ValidationError(_('Please use an image 160 x 160 pixels'))
+
+            #validate content type
+            im_format = img.format
+            if not im_format.lower() in ['jpeg', 'png', 'jpg']:
+                raise ValidationError(_('Please use a JPEG or PNG image.'))
+
+        else:
+            raise ValidationError(_("Couldn't read uploaded image"))
+
+        return image
 
 
 class Manufacturer(MainClass):
@@ -100,7 +121,6 @@ class Product(models.Model):
     filepath = 'static/products/'
     productPhoto_original = ProcessedImageField(upload_to=filepath,
                                                 processors=[ResizeToFill(400, 300)],
-
                                                 verbose_name='Фото товара формат (выс4*шир3)')
     productPhoto_medium = models.CharField(max_length=255, blank=True, editable=False)
     productPhoto_thumb = models.CharField(max_length=255, blank=True, editable=False)
@@ -117,6 +137,13 @@ class Product(models.Model):
     def get_original(self):
         return '%s/%s' % (SITE_ADDR, self.productPhoto_original)
     get_original.allow_tags = True
+
+    def delete(self, *args, **kwargs):
+        self.productPhoto_original.delete(save=False)
+        os.remove(self.productPhoto_medium)
+        os.remove(self.productPhoto_thumb)
+
+        super().delete(*args, **kwargs)
 
     # And all the image resizing magic happens here, where I'm overriding the model's save() method.
     def save(self, *args, **kwargs):
@@ -142,7 +169,6 @@ class Product(models.Model):
                     pass
         # clean_productPhoto_original(self)
         super(Product, self).save()
-        Product.clean(self)
 
         # размеры будущих картинок
         sizes = {'thumbnail': {'height': 100, 'width': 130}, 'medium': {'height': 162, 'width': 216},}
@@ -155,8 +181,8 @@ class Product(models.Model):
         fullpath = photopath.rsplit('/', 1)[0]  # the path only (minus the filename.extension)
 
         # use the file extension to determine if the image is valid before proceeding
-        if extension not in ['jpg', 'jpeg', 'gif', 'png']:
-            sys.exit()
+        # if extension not in ['jpg', 'jpeg', 'gif', 'png']:
+        #     sys.exit()
 
         # create medium image
         im.thumbnail((sizes['medium']['width'], sizes['medium']['height']), Image.ANTIALIAS)
@@ -178,32 +204,42 @@ class Product(models.Model):
     def __unicode__(self):
         return self.productTitle
 
-
-
-
     def clean(self):
-        print("clean_productPhoto_original")
         image = self.productPhoto_original
 
         if image:
+            #validate dimensions
             img = Image.open(image)
             w, h = img.size
+            if w != 400 or h != 300:
+                raise ValidationError(_('Please use an image 400 x 300 pixels'))
 
-            #validate dimensions
-            max_width = max_height = 10
-            if w > max_width or h > max_height:
-                raise ValidationError(_('Please use an image that is smaller or equal to '
-                      '%s x %s pixels.' % (max_width, max_height)))
+            #validate content type
+            im_format = img.format
+            if not im_format.lower() in ['jpeg', 'png', 'jpg']:
+                raise ValidationError(_('Please use a JPEG or PNG image.'))
 
-            # #validate content type
-            # main, sub = image.content_type.split('/')
-            # if not (main == 'image' and sub.lower() in ['jpeg', 'pjpeg', 'png', 'jpg']):
-            #     raise ValidationError(_('Please use a JPEG or PNG image.'))
-            #
             # #validate file size
             # if len(image) > (1 * 1024 * 1024):
             #     raise ValidationError(_('Image file too large ( maximum 1mb )'))
         else:
             raise ValidationError(_("Couldn't read uploaded image"))
+
         return image
 
+# Programmatically saving image to Django ImageField
+# http://stackoverflow.com/questions/1308386/programmatically-saving-image-to-django-imagefield
+
+# Django: add image in an ImageField from image url
+# http://stackoverflow.com/questions/1393202/django-add-image-in-an-imagefield-from-image-url
+
+# django imagekit: set ProcessedImageField from image url
+# http://stackoverflow.com/questions/19386866/django-imagekit-set-processedimagefield-from-image-url
+# http://www.wenda.io/questions/5011020/django-imagekit-set-processedimagefield-from-image-url.html
+
+# Generates thumbnails after image is uploaded into memory
+# http://djangothumbnails.com/
+
+# How to resize the new uploaded images using PIL before saving?
+# http://stackoverflow.com/questions/7970637/how-to-resize-the-new-uploaded-images-using-pil-before-saving
+# https://github.com/un1t/django-resized
