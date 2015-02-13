@@ -1,17 +1,12 @@
-from django.shortcuts import render_to_response, redirect, HttpResponse
-from store.models import *  # импортируем модели
-# #from django.core.exceptions import ObjectDoesNotExist  # ошибка - объект не существует
-# #from django.http.response import Http404  # вывод страницы 404
-# from store.forms import CommentForm
-# from django.core.context_processors import csrf  # защита данных передаваемых из форм
-# #from django.contrib import auth   # модуль авторизации
+from django.shortcuts import render_to_response
+from store.models import *
 from django.template import RequestContext
-# from django.contrib import messages
 from MULTYDOM.settings import SITE_ADDR
 
 args = dict()
 args['categories'] = Category.objects.all()
 args['SITE_ADDR'] = SITE_ADDR
+args['brands'] = Manufacturer.objects.all()
 
 
 def product(request, product_id=1):
@@ -34,9 +29,14 @@ def category_filter(request, category_id):
     return render_to_response('products.html', args, context_instance=RequestContext(request))
 
 
-def paymentDelivery(request):
+def brands(request):
+    return render_to_response('brands.html', args, context_instance=RequestContext(request))
 
-    return render_to_response('paymentDelivery.html',)
+
+def brand_filter(request, brand_id):
+    args['products'] = Product.objects.filter(productManufacturer_id=brand_id)
+
+    return render_to_response('products.html', args, context_instance=RequestContext(request))
 
 
 def docs(request):

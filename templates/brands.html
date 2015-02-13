@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+
+{% block brands %}
+  <div class="col-lg-3" id="groupPanel">
+            <ul class="nav nav-tabs nav-stacked">
+               {% for brand in brands %}
+                    <li><a href="{% url 'brand_filter' brand.id %}">{{ brand.title}}</a></li>
+               {% endfor %}
+            </ul>
+        </div>
+        <div class="col-lg-9" id="prodPanel">
+            {% for brand in brands %}
+                <div class="col-lg-3" id="thumbnailCol">
+                    <a href="{% url 'brand_filter' brand.id %}" id="thumbnail">
+                        <img src="{{ brand.pic }}" alt="{{ brand.title }}" data-toggle="tooltip" data-placement="top" title="{{ brand.title }}">
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+{% endblock %}

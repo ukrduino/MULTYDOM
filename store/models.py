@@ -1,5 +1,5 @@
 from django.db import models
-from MULTYDOM.settings import SITE_ADDR, STATICFILES_DIRS
+from MULTYDOM.settings import SITE_ADDR, STATICFILES_DIRS, TRIM_PATH
 from PIL import Image
 import os
 # for image resizing
@@ -9,9 +9,6 @@ from imagekit.processors import ResizeToFill
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ValidationError
 # усечение лишнего пути для отображения картинок
-
-# change on pythonanywhere
-trim_path = 39  # on hosting change to 24
 
 
 # абстрактный класс имеет имя и картинку 160*160
@@ -36,7 +33,7 @@ class MainClass(models.Model):
 
     def pic(self):
         if self.image:
-            return '%s/%s' % (SITE_ADDR, self.image.url[trim_path:])
+            return '%s/%s' % (SITE_ADDR, self.image.url[TRIM_PATH:])
         else:
             return '(none)'
 
@@ -46,7 +43,7 @@ class MainClass(models.Model):
 # функция формирования пути к картинке объекта Product для отображения в админке
     def admin_pic(self):
         if self.image:
-            return '<img src="%s/%s"/>' % (SITE_ADDR, self.image.url[trim_path:])
+            return '<img src="%s/%s"/>' % (SITE_ADDR, self.image.url[TRIM_PATH:])
         else:
             return '(none)'
     admin_pic.short_description = 'Изображение'
@@ -141,20 +138,20 @@ class Product(models.Model):
 
     # methods to return paths to the thumbnail, medium, and original images
     def get_thumb(self):
-        return '<img src="%s/%s"/>' % (SITE_ADDR, self.productPhoto_thumb[trim_path:])
+        return '<img src="%s/%s"/>' % (SITE_ADDR, self.productPhoto_thumb[TRIM_PATH:])
     get_thumb.allow_tags = True
 
     def get_thumb_cart(self):
-        return '%s/%s' % (SITE_ADDR, self.productPhoto_thumb[trim_path:])
+        return '%s/%s' % (SITE_ADDR, self.productPhoto_thumb[TRIM_PATH:])
     get_thumb.allow_tags = True
 
     def get_medium(self):
-        return '%s/%s' % (SITE_ADDR, self.productPhoto_medium[trim_path:])
+        return '%s/%s' % (SITE_ADDR, self.productPhoto_medium[TRIM_PATH:])
     get_medium.allow_tags = True
 
     def get_original(self):
 
-        return '%s/%s' % (SITE_ADDR, self.productPhoto_original.path[trim_path:])
+        return '%s/%s' % (SITE_ADDR, self.productPhoto_original.path[TRIM_PATH:])
     get_original.allow_tags = True
 
     def delete(self, *args, **kwargs):

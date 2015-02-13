@@ -8,6 +8,8 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 SITE_ADDR = "http://127.0.0.1:8000" # менять на "http://multydom.pythonanywhere.com/"
 
+TRIM_PATH = 39  # on hosting change to 24
+
 SECRET_KEY = 'ir2u0zd7gpxfad@d5eocvwdn0ulmb@9*k)^4*whtupzyo$qcca'
 
 DEBUG = True
