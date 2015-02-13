@@ -2,15 +2,13 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-# comment on pythonanywhere
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
+# change on pythonanywhere
+
 SITE_ADDR = "http://127.0.0.1:8000" # менять на "http://multydom.pythonanywhere.com/"
-LOCAL = True
-
-
 
 SECRET_KEY = 'ir2u0zd7gpxfad@d5eocvwdn0ulmb@9*k)^4*whtupzyo$qcca'
-
 
 DEBUG = True
 
@@ -30,15 +28,20 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'store',
-    'imagekit',  #http://django-imagekit.readthedocs.org/en/latest/
-    # 'cart',
-    # 'bootstrap3',
-    # 'captcha',
+    #http://django-imagekit.readthedocs.org/en/latest/
+    'imagekit',
+    'cart',
+    'bootstrap3',
+    'captcha',
+    # comment on pythonanywhere
     'debug_toolbar',
 )
 
+
+
 MIDDLEWARE_CLASSES = (
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+
+    'debug_toolbar.middleware.DebugToolbarMiddleware',  # comment on pythonanywhere
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -101,18 +104,21 @@ TEMPLATE_CONTEXT_PROCESSORS = (  # http://stackoverflow.com/questions/2551933/
 )
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-#
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_HOST_USER = 'Alex.Vlasov.ukr@gmail.com'
-# EMAIL_HOST_PASSWORD = 'sasha7777'
-# EMAIL_USE_TLS = True
-# DEFAULT_FROM_EMAIL = "Alex.Vlasov.ukr@gmail.com"
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-#
-##CAPTCHA_FONT_SIZE ='30'
-# CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
-# CAPTCHA_LETTER_ROTATION = (-5, 5)
-# CAPTCHA_BACKGROUND_COLOR = 'white'
-# CAPTCHA_FOREGROUND_COLOR = '#000'
-# CAPTCHA_NOISE_FUNCTIONS = ()
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'Alex.Vlasov.ukr@gmail.com'
+EMAIL_HOST_PASSWORD = 'sasha7777'
+EMAIL_USE_TLS = True
+# отправитель магазин
+DEFAULT_FROM_EMAIL = "Alex.Vlasov.ukr@gmail.com"
+# получатель хозяин/менеджер магазина
+DEFAULT_TO_EMAIL = 'ukrduino@gmail.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+#CAPTCHA_FONT_SIZE ='30'
+CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
+CAPTCHA_LETTER_ROTATION = (-5, 5)
+CAPTCHA_BACKGROUND_COLOR = 'white'
+CAPTCHA_FOREGROUND_COLOR = '#000'
+CAPTCHA_NOISE_FUNCTIONS = ()

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load bootstrap3 %}
+
+{% block cart %}
+    <div class="row">
+        {% if not request.session.cart_qwt_of_prods%}
+            <div class="col-lg-12" id="emptyCart">
+                <div class="well">В вашей корзине пока ничего нет :(</div>
+            </div>
+        {% else %}
+            <div class="col-lg-6" id="cartItems">
+                <ul class="list-group" id="cartItemsList">
+                    {% for key, value in request.session.grouped_prods_in_cart.items %}
+                        {% for prod in products %}
+                            {% if prod.id|slugify  == key %}
+                                <li class="list-group-item">
+                                    <div class="row" id="cartProdRow">
+                                        <div class="col-lg-4">
+                                            <img src="{{ prod.get_thumb_cart }}" alt="{{ prod.productTitle }}">
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <a href="{% url 'product' prod.id %}">{{ prod.productTitle }}</a>
+                                            <p id="cartPrice">Цена за ед.: {{ prod.productCurrentPrice }} грн</p>
+                                        </div>
+                                        <div class="col-lg-1">
+                                            {{ value }}
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <a href="{% url 'rem' prod.id %}" class="btn btn-sm btn-danger"><strong>-</strong></a>
+                                            <a href="{% url 'add' prod.id %}" class="btn btn-sm btn-success"><strong>+</strong></a>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+                <div class="row">
+                    <div class="col-lg-12" id="cartPrice"><p>Общая сумма заказа: {{ request.session.cart_cost }} грн.</p></div>
+                </div>
+            </div>
+            <div class="col-lg-6" id="orderDetails">
+                <p>Пожалуйста, введите Ваши данные для оформления заказа . . .   <span class="glyphicon glyphicon-pencil"></span></p>
+                {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                            {% if 'success' in message.tags %}
+                                <div class="alert alert-success" role="alert">
+                                   {{ message }}
+                                </div>
+                            {% endif %}
+                            {% if 'error' in message.tags %}
+                                <div class="alert alert-danger" role="alert">
+                                   {{ message }}
+                                </div>
+                            {% endif %}
+                        {%  endfor %}
+                    </div>
+                {% endif %}
+                <form action='{% url 'make_order' %}' method="post">
+                    {% csrf_token %}
+                    {% bootstrap_form form layout='inline'%}
+                    <input id="addOrder" type="submit" class="btn btn-success" value="Добавить заказ">
+                </form>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

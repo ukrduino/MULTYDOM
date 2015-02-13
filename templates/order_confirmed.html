@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load bootstrap3 %}
+
+{% block order_confirmed %}
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 jumbotron order">
+          <h3>Ваш заказ подтвержден!!!</h3>
+          <p>Ожидайте звонка представителя магазина.</p>
+          <p><a class="btn btn-primary btn-lg" href="{% url "categories" %}">В магазин</a></p>
+        </div>
+    </div>
+{% endblock %}

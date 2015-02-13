@@ -110,7 +110,7 @@ body {
     font-size: 14px;
     background: rgba(92, 0, 6, 0.61);
     padding: 0;
-        border-radius: 5px;
+    border-radius: 5px;
 }
 #oneProdPanel.col-lg-8{
     margin: 0;
@@ -142,6 +142,104 @@ body {
     padding: 0;
     margin: 0;
 }
+
+/* Корзина*/
+
+/*http://fortawesome.github.io/Font-Awesome/*/
+
+#emptyCart .well{
+    text-align: center;
+    background: rgba(92, 0, 6, 0.61);
+    color: #ffffff;
+    font-size: 16px;
+    font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace ;
+}
+
+.badge {
+    border-radius: 7px;
+    background-color: blue;
+}
+
+#cartProdRow{
+    margin: 5px;
+
+}
+
+#cartItems{
+    padding: 0;
+    color: #ffffff;
+    background: rgba(92, 0, 6, 0.61);
+    margin: 0;
+    border-radius: 5px;
+
+}
+
+#cartItems .col-lg-4 > img{
+    border-radius: 5px;
+}
+
+#cartItems .col-lg-2{
+    padding: 0;
+    text-align: center;
+}
+
+#cartProdRow .col-lg-4 {
+    padding: 0;
+    text-align: left;
+
+}
+#cartProdRow .col-lg-5 > a{
+    padding: 0;
+    text-align: left;
+    color: #97e5f3;
+}
+#cartPrice{
+    color: #549be1;
+    text-align: right;
+}
+#cartPrice.col-lg-12 > p{
+    font-size: 20px;
+    color: #DBFF34;
+    text-align: right;
+}
+#cartItemsList .list-group-item {
+    background: rgba(0, 0, 0, 0);
+    margin-bottom: 5px;
+    padding: 2px;
+}
+#orderDetails{
+    margin: 0;
+    padding-left: 15px;
+    padding-right: 0;
+    background: rgba(92, 0, 6, 0.61);
+    border-radius: 5px;
+    text-align: right;
+    padding-bottom: 10px;
+}
+#orderDetails > p {
+    padding-top: 15px;
+    color: #ffffff;
+    font-family: sans-serif;
+}
+.captcha{
+    border-radius: 5px;
+}
+input#id_captcha_1.form-control{
+    width: 40px;
+    display: inline-block;
+    padding: 2px;
+    font-size: 20px;
+    vertical-align: bottom;
+}
+#addOrder{
+    display: inline-block;
+}
+.order{
+    background: rgba(27, 36, 35, 0.58);
+    color: #C9F2CA;
+    text-align: center;
+}
+
 
 
 

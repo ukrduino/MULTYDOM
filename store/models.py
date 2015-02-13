@@ -8,9 +8,14 @@ from imagekit.processors import ResizeToFill
 # for validation
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ValidationError
+# усечение лишнего пути для отображения картинок
+
+# change on pythonanywhere
+trim_path = 39  # on hosting change to 24
 
 
-class MainClass(models.Model):  # абстрактный класс имеет имя и картинку 160*160
+# абстрактный класс имеет имя и картинку 160*160
+class MainClass(models.Model):
     class Meta:
         abstract = True
         app_label = 'Магазин'
@@ -31,7 +36,7 @@ class MainClass(models.Model):  # абстрактный класс имеет �
 
     def pic(self):
         if self.image:
-            return '%s/%s' % (SITE_ADDR, self.image.url[39:])
+            return '%s/%s' % (SITE_ADDR, self.image.url[trim_path:])
         else:
             return '(none)'
 
@@ -39,13 +44,13 @@ class MainClass(models.Model):  # абстрактный класс имеет �
     pic.allow_tags = True
 
 # функция формирования пути к картинке объекта Product для отображения в админке
-    def adminPic(self):
+    def admin_pic(self):
         if self.image:
-            return '<img src="%s/%s"/>' % (SITE_ADDR, self.image.url[39:])
+            return '<img src="%s/%s"/>' % (SITE_ADDR, self.image.url[trim_path:])
         else:
             return '(none)'
-    adminPic.short_description = 'Изображение'
-    adminPic.allow_tags = True
+    admin_pic.short_description = 'Изображение'
+    admin_pic.allow_tags = True
 
     def delete(self, *args, **kwargs):
         self.image.delete(save=False)
@@ -110,9 +115,9 @@ class Category(MainClass):
 
 class Product(models.Model):
     class Meta:
-        db_table = 'product'  # определяем свое название таблицы в Б.Д.
-        verbose_name = 'Товар'  # имя модели в админке в ед ч
-        verbose_name_plural = 'Товары'  # имя модели в админке в мн ч
+        db_table = 'product'
+        verbose_name = 'Товар'
+        verbose_name_plural = 'Товары'
 
     productTitle = models.CharField(max_length=100, verbose_name='Название товара', blank=False, unique=True)
     productSlug = models.CharField(max_length=100, verbose_name='URL')
@@ -123,8 +128,8 @@ class Product(models.Model):
     productPresence = models.BooleanField(verbose_name='В наличии', default=True)
     productForOrder = models.BooleanField(verbose_name='Под заказ', default=False)
     productSize = models.CharField(verbose_name='Размер', blank=True, max_length=100)
-    productManufacturer = models.ForeignKey(Manufacturer)  # производитель товара
-    productCategory = models.ForeignKey(Category)  # производитель товара
+    productManufacturer = models.ForeignKey(Manufacturer)
+    productCategory = models.ForeignKey(Category)
 
 # http://www.mechanicalgirl.com/view/image-resizing-file-uploads-doing-it-easy-way/
     upload_path = '%s/products/' % STATICFILES_DIRS
@@ -136,16 +141,20 @@ class Product(models.Model):
 
     # methods to return paths to the thumbnail, medium, and original images
     def get_thumb(self):
-        return '<img src="%s/%s"/>' % (SITE_ADDR, self.productPhoto_thumb[39:])
+        return '<img src="%s/%s"/>' % (SITE_ADDR, self.productPhoto_thumb[trim_path:])
+    get_thumb.allow_tags = True
+
+    def get_thumb_cart(self):
+        return '%s/%s' % (SITE_ADDR, self.productPhoto_thumb[trim_path:])
     get_thumb.allow_tags = True
 
     def get_medium(self):
-        return '%s/%s' % (SITE_ADDR, self.productPhoto_medium[39:])
+        return '%s/%s' % (SITE_ADDR, self.productPhoto_medium[trim_path:])
     get_medium.allow_tags = True
 
     def get_original(self):
 
-        return '%s/%s' % (SITE_ADDR, self.productPhoto_original.path[39:])
+        return '%s/%s' % (SITE_ADDR, self.productPhoto_original.path[trim_path:])
     get_original.allow_tags = True
 
     def delete(self, *args, **kwargs):
@@ -161,10 +170,11 @@ class Product(models.Model):
 # http://tiku.io/questions/133317/replacing-a-django-image-doesnt-delete-original
 # В случае замены картинки удаляет старые файлы картинок привязанные к товару.
         if self.pk:
+            # товар до сохранения
+            old = self.__class__._default_manager.get(pk=self.pk)
 
-            old = self.__class__._default_manager.get(pk=self.pk) # товар до сохранения
-
-            if old.productPhoto_original.name and (not self.productPhoto_original._committed or not self.productPhoto_original.name):
+            if old.productPhoto_original.name and (not self.productPhoto_original._committed
+                                                   or not self.productPhoto_original.name):
                 # удаляем основное фото
                 old.productPhoto_original.delete(save=False)
                 # Удаляем medium
@@ -182,29 +192,26 @@ class Product(models.Model):
 
         # размеры будущих картинок
         sizes = {'thumbnail': {'height': 100, 'width': 130}, 'medium': {'height': 162, 'width': 216},}
-        photopath = str(self.productPhoto_original.path)  # this returns the full system path to the original file
-        im = Image.open(photopath)  # open the image using PIL
+        photo_path = str(self.productPhoto_original.path)  # this returns the full system path to the original file
+        im = Image.open(photo_path)  # open the image using PIL
 
         # pull a few variables out of that full path
-        extension = photopath.rsplit('.', 1)[1]  # the file extension
-        filename = photopath.rsplit('/', 1)[1].rsplit('.', 1)[0]  # the file name only (minus path or extension)
-        fullpath = photopath.rsplit('/', 1)[0]  # the path only (minus the filename.extension)
-
-        # use the file extension to determine if the image is valid before proceeding
-        # if extension not in ['jpg', 'jpeg', 'gif', 'png']:
-        #     sys.exit()
+        # extension = photo_path.rsplit('.', 1)[1]  # the file extension
+        filename = photo_path.rsplit('/', 1)[1].rsplit('.', 1)[0]  # the file name only (minus path or extension)
+        full_path = photo_path.rsplit('/', 1)[0]  # the path only (minus the filename.extension)
 
         # create medium image
         im.thumbnail((sizes['medium']['width'], sizes['medium']['height']), Image.ANTIALIAS)
-        medname = filename + "_" + str(sizes['medium']['width']) + "x" + str(sizes['medium']['height']) + ".jpg"
-        im.save(fullpath + '/' + medname)
-        self.productPhoto_medium = self.upload_path + medname
+        med_name = filename + "_" + str(sizes['medium']['width']) + "x" + str(sizes['medium']['height']) + ".jpg"
+        im.save(full_path + '/' + med_name)
+        self.productPhoto_medium = self.upload_path + med_name
 
         # create thumbnail
         im.thumbnail((sizes['thumbnail']['width'], sizes['thumbnail']['height']), Image.ANTIALIAS)
-        thumbname = filename + "_" + str(sizes['thumbnail']['width']) + "x" + str(sizes['thumbnail']['height']) + ".jpg"
-        im.save(fullpath + '/' + thumbname)
-        self.productPhoto_thumb = self.upload_path + thumbname
+        thumb_name = filename + "_" + str(sizes['thumbnail']['width']) \
+                              + "x" + str(sizes['thumbnail']['height']) + ".jpg"
+        im.save(full_path + '/' + thumb_name)
+        self.productPhoto_thumb = self.upload_path + thumb_name
 
         super(Product, self).save(*args, **kwargs)
 

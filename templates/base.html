@@ -39,7 +39,7 @@
                     <li><a href="{% url 'paymentDelivery' %}">Оплата/Доставка</a></li>
                     <li><a href="{% url 'docs' %}">Сертификаты</a></li>
                     <li><a href="{% url 'about' %}">О нас</a></li>
-                    <li><a href="#">Корзина</a></li>
+                    <li><a href="{% url 'my_cart' %}">Корзина {% if request.session.cart_qwt_of_prods %} <span class="badge"> {{ request.session.cart_qwt_of_prods }}</span>{% endif %}</a></li>
             </ul>
             {% block actions %}{% endblock %}
             {% block categories %}{% endblock %}
@@ -49,6 +49,8 @@
             {% block docs %}{% endblock %}
             {% block about %}{% endblock %}
             {% block cart %}{% endblock %}
+            {% block order_created %}{% endblock %}
+            {% block order_confirmed %}{% endblock %}
 
         </div>
     </div>

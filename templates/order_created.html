@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block order_created %}
+    <div class="row">
+        <div class="col-lg-12 jumbotron order">
+          <h3>Спасибо за Ваш заказ!!!!</h3>
+          <p>На Ваш электронный адрес {{ email }} направлено письмо со ссылкой для подтверждения заказа.</p>
+          <p>После подтверждения заказа с Вами свяжется представитель магазина.</p>
+          <p><a class="btn btn-primary btn-lg" href="{% url "categories" %}">В магазин</a></p>
+        </div>
+    </div>
+{% endblock %}

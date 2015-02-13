@@ -13,7 +13,7 @@
         <div class="col-lg-9" id="oneProdPanel">
           <div class="col-lg-8">
               <img src="{{ product.get_original }}" alt="{{ product.productTitle }}">
-              <p class="price">Цена: {{ product.productCurrentPrice }} грн <a href="#" class="btn btn-success" role="button">Купить</a></p>
+              <p class="price">Цена: {{ product.productCurrentPrice }} грн <a href="{% url 'add_main' product.id %}" class="btn btn-success" role="button">Купить</a></p>
           </div>
             <div class="col-lg-4">
               <h3>{{ product.productTitle }}</h3>
