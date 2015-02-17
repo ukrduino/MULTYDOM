@@ -5,13 +5,13 @@
 {% block categories %}
   <div class="col-lg-3" id="groupPanel">
             <ul class="nav nav-tabs nav-stacked">
-               {% for category in categories %}
+               {% for category in main_categories %}
                     <li><a href="{% url 'category_filter' category.id %}">{{ category.title}}</a></li>
                {% endfor %}
             </ul>
         </div>
         <div class="col-lg-9" id="prodPanel">
-            {% for category in categories %}
+            {% for category in main_categories %}
                 <div class="col-lg-3" id="thumbnailCol">
                     <a href="{% url 'category_filter' category.id %}" id="thumbnail">
                         <img src="{{ category.pic }}" alt="{{ category.title }}" data-toggle="tooltip" data-placement="top" title="{{ category.title }}">

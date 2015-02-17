@@ -3,8 +3,9 @@ from store.models import *
 from django.template import RequestContext
 from MULTYDOM.settings import SITE_ADDR
 
+
 args = dict()
-args['categories'] = Category.objects.all()
+all_categories = Category.objects.all()
 args['SITE_ADDR'] = SITE_ADDR
 args['brands'] = Manufacturer.objects.all()
 
@@ -19,14 +20,30 @@ def actions(request):
     return render_to_response('actions.html', )
 
 
-def categories(request):
-    return render_to_response('categories.html', args, context_instance=RequestContext(request))
+def categories(request, cats=all_categories):
+
+    for cat in cats:
+        if not cat.parentCategory_id:
+            main_categories = list()
+            main_categories.append(cat)
+            args['main_categories'] = main_categories
+            return render_to_response('categories.html', args, context_instance=RequestContext(request))
+        else:
+            args['main_categories'] = cats
 
 
 def category_filter(request, category_id):
-    args['products'] = Product.objects.filter(productCategory_id=category_id)
 
-    return render_to_response('products.html', args, context_instance=RequestContext(request))
+    cats = Category.objects.filter(parentCategory_id=category_id)
+
+    if len(cats) > 0:
+        categories(request, cats)
+    else:
+        args['products'] = Product.objects.filter(productCategory_id=category_id)
+        return render_to_response('products.html', args, context_instance=RequestContext(request))
+
+    print("5")
+    return render_to_response('categories.html', args, context_instance=RequestContext(request))
 
 
 def brands(request):
