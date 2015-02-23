@@ -1,4 +1,5 @@
 from django.db import models
+#TODO - избавиться от TRIM_PATH переделав алгоритм загрузки фото
 from MULTYDOM.settings import SITE_ADDR, STATICFILES_DIRS, TRIM_PATH
 from PIL import Image
 import os
@@ -24,6 +25,7 @@ class MainClass(models.Model):
 
     title = models.CharField(max_length=100, verbose_name='Название', blank=False, unique=True)
     slug = models.CharField(max_length=100, verbose_name='URL')
+    #TODO - сделать переименование файлов при загрузке с использованием slug
     upload_path = '%s/other' % STATICFILES_DIRS
     image = ProcessedImageField(upload_to=upload_path,
                                 processors=[ResizeToFill(160, 160)],
@@ -98,6 +100,7 @@ class Manufacturer(MainClass):
 
 # MainClass._meta.get_field('image').blank = True
 
+#TODO - построение дерева категорий сделать только с использованием Django MPTT
 
 class Category(MainClass):
     class Meta():
@@ -115,6 +118,7 @@ class Category(MainClass):
 # MainClass._meta.get_field('image').blank = True
 
 
+#TODO - а как начет нескольких картинок товара???
 class Product(models.Model):
     class Meta:
         db_table = 'product'

@@ -36,3 +36,9 @@ class CategoryAdmin(admin.ModelAdmin):
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)
 admin.site.register(Category, CategoryAdmin)
+
+#TODO - django-MPTT для категорий
+#TODO - нормальные названия кнопок
+#TODO - ширина столбцов в таблицах
+#TODO - загрузка картинок в карусель, создание простых страниц
+#TODO - WYSWYG редактор

@@ -33,6 +33,7 @@ def categories(request, cats=all_categories):
 
     return render_to_response('categories.html', args, context_instance=RequestContext(request))
 
+#TODO - сделать универсальный фильтр (категории,товары,бренды)
 
 def category_filter(request, category_id):
 
