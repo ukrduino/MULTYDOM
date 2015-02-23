@@ -109,13 +109,13 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'Alex.Vlasov.ukr@gmail.com'
-EMAIL_HOST_PASSWORD = 'sasha7777'
+EMAIL_HOST_USER = 'multydom2015@gmail.com'
+EMAIL_HOST_PASSWORD = 'sashailina'
 EMAIL_USE_TLS = True
 # отправитель магазин
-DEFAULT_FROM_EMAIL = "Alex.Vlasov.ukr@gmail.com"
+DEFAULT_FROM_EMAIL = "multydom2015@gmail.com"
 # получатель хозяин/менеджер магазина
-DEFAULT_TO_EMAIL = 'ukrduino@gmail.com'
+DEFAULT_TO_EMAIL = 'vlasov_com@mail.ru'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 #CAPTCHA_FONT_SIZE ='30'
@@ -124,3 +124,8 @@ CAPTCHA_LETTER_ROTATION = (-5, 5)
 CAPTCHA_BACKGROUND_COLOR = 'white'
 CAPTCHA_FOREGROUND_COLOR = '#000'
 CAPTCHA_NOISE_FUNCTIONS = ()
+
+# multydom.pythonanywhere.com
+# sasha
+# multydom2015@gmail.com
+# sashailina

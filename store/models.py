@@ -8,7 +8,12 @@ from imagekit.processors import ResizeToFill
 # for validation
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ValidationError
-# усечение лишнего пути для отображения картинок
+
+validation_message1 = 'Используйте квадратное изображение размером не менее 160 x 160 pixels'
+validation_message2 = 'Используйте изображение формата  JPEG или PNG.'
+validation_message3 = 'Загруженный файл не читается'
+validation_message4 = 'Используйте изображение с соотношением сторон Ширина/Высота = 1.33 и размером не менее 400 x 300,' \
+                      ' оно будет автоматически уменьшено'
 
 
 # абстрактный класс имеет имя и картинку 160*160
@@ -68,15 +73,15 @@ class MainClass(models.Model):
             img = Image.open(image)
             w, h = img.size
             if w != h:
-                raise ValidationError(_('Please use an image 160 x 160 pixels'))
+                raise ValidationError(_(validation_message1))
 
             #validate content type
             im_format = img.format
             if not im_format.lower() in ['jpeg', 'png', 'jpg']:
-                raise ValidationError(_('Please use a JPEG or PNG image.'))
+                raise ValidationError(_(validation_message2))
 
         else:
-            raise ValidationError(_("Couldn't read uploaded image"))
+            raise ValidationError(_(validation_message3))
 
         return image
 
@@ -229,19 +234,18 @@ class Product(models.Model):
             img_asp_ratio = float(format(w/h, '.2f'))
             my_asp_ratio = float(format(400/300, '.2f'))
             if img_asp_ratio != my_asp_ratio and (w < 400 or h < 300):
-                raise ValidationError(_('Please use an image with 1.33 aspect ratio and size not less than 400 x 300 '
-                                        'pixels, image will be autoresized'))
+                raise ValidationError(_(validation_message4))
 
             #validate content type
             im_format = img.format
             if not im_format.lower() in ['jpeg', 'png', 'jpg']:
-                raise ValidationError(_('Please use a JPEG or PNG image.'))
+                raise ValidationError(_(validation_message2))
 
             # #validate file size
             # if len(image) > (1 * 1024 * 1024):
             #     raise ValidationError(_('Image file too large ( maximum 1mb )'))
         else:
-            raise ValidationError(_("Couldn't read uploaded image"))
+            raise ValidationError(_(validation_message3))
 
         return image
 
