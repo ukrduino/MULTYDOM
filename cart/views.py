@@ -176,8 +176,14 @@ def confirm_order(request, order_code):
     order.order_confirmed = True
     order.save()
     shop_email_subject = "Заказ №%s - подтвержден!!!" % order_code
-    shop_email_body = "Заказ №%s!\n Покупатель - %s.\n Телефон клиента - %s.\n Товары - %s.\n Сумма заказа - %s.\n " \
-                      "Форма оплаты - %s.\n Адрес доставки - %s.\n Способ доставки - %s" \
+    shop_email_body = "Заказ №%s!\n" \
+                      "Покупатель - %s.\n" \
+                      "Телефон клиента - %s.\n" \
+                      "Товары - %s.\n" \
+                      "Сумма заказа - %s.\n " \
+                      "Форма оплаты - %s.\n" \
+                      "Адрес доставки - %s.\n" \
+                      "Способ доставки - %s" \
                       % (order.order_code,
                          order.order_person,
                          order.order_person_phone,
@@ -187,7 +193,7 @@ def confirm_order(request, order_code):
                          order.order_person_address,
                          order.order_delivery_option)
 
-    send_mail(shop_email_subject, shop_email_body, 'Alex.Vlasov.ukr@gmail.com', ['ukrduino@gmail.com'],
+    send_mail(shop_email_subject, shop_email_body, DEFAULT_FROM_EMAIL, [DEFAULT_TO_EMAIL],
               fail_silently=False)
 
     return redirect('order_confirmed')
