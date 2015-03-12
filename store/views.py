@@ -8,7 +8,6 @@ args = dict()
 args['SITE_ADDR'] = SITE_ADDR
 
 
-
 def product(request, product_id=1):
     args['product'] = Product.objects.get(id=product_id)
 
@@ -22,10 +21,13 @@ def actions(request):
 def categories(request):
 
     args['categories'] = Category.objects.filter(parentCategory=None)
+    args['side_categories'] = Category.objects.all()
 
     return render_to_response('categories.html', args, context_instance=RequestContext(request))
 
 #TODO - сделать универсальный фильтр (категории,товары,бренды)
+#TODO - не выводить категории без товаров
+#TODO - изменение цены товара из админки
 
 
 def category_filter(request, category_id):
@@ -34,6 +36,7 @@ def category_filter(request, category_id):
 
     if len(cats) > 0:
         args['categories'] = cats
+        args['side_categories'] = Category.objects.all()
 
     else:
         args['products'] = Product.objects.filter(productCategory_id=category_id)
