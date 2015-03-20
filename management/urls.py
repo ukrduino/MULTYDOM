@@ -6,8 +6,9 @@ urlpatterns = patterns('management.views',
 
                        url(r'newDollar', 'newDollar', name='newDollar'),
                        url(r'newPriceIndex', 'newPriceIndex', name='newPriceIndex'),
+                       url(r'login', 'user_login', name='user_login'),
                        # переход на менеджерскую страницу с других страниц
-                       url(r'$', 'management'),
+                       url(r'$', 'management', name='management'),
 
                        )
 

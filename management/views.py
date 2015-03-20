@@ -1,25 +1,33 @@
-from django.shortcuts import render_to_response, redirect, HttpResponseRedirect
+from django.shortcuts import render_to_response, HttpResponse, HttpResponseRedirect, render, redirect
 from django.template import RequestContext
 from management.models import Dollar, PriceIndex
 from store.models import Product
 from management.forms import DollarForm, PriceIndexForm
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
 
 
 def management(request):
-    try:
-        args['dollar_active'] = Dollar.objects.get(dollar_active=True)
-        args['index_active'] = PriceIndex.objects.get(priceIndex_active=True)
 
-    except:
-        pass
-    args['dollar_archiv'] = Dollar.objects.all().order_by('-dollar_date')[:5]
-    args['index_archiv'] = PriceIndex.objects.all().order_by('-priceIndex_date')[:5]
+    if request.user.is_authenticated():
+        try:
+            args['dollar_active'] = Dollar.objects.get(dollar_active=True)
+            args['index_active'] = PriceIndex.objects.get(priceIndex_active=True)
+        except:
+            pass
+        args['dollar_archiv'] = Dollar.objects.all().order_by('-dollar_date')[:5]
+        args['index_archiv'] = PriceIndex.objects.all().order_by('-priceIndex_date')[:5]
 
-    args['form1'] = DollarForm
-    args['form2'] = PriceIndexForm
+        args['form1'] = DollarForm
+        args['form2'] = PriceIndexForm
 
-    return render_to_response('management.html', args, context_instance=RequestContext(request))
+        return render_to_response('management.html', args, context_instance=RequestContext(request))
+    else:
+        form = AuthenticationForm()
+        return redirect('user_login')
+
 
 
 def newDollar(request):
@@ -89,6 +97,31 @@ def newPrice1(index, fromStartPrice):
             prod.save()
 
 
+
+
+
+
+def user_login(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return redirect('management')
+                else:
+                    return HttpResponse("Inactive User")
+            else:
+                return HttpResponse("Bad Job")
+    else:
+        form = AuthenticationForm()
+    return render(request, 'login.html', {
+        'form': form,
+    })
 
 
 

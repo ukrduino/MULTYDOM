@@ -2,6 +2,7 @@ from django.forms import ModelForm, TextInput
 from management.models import Dollar, PriceIndex
 
 
+
 class DollarForm(ModelForm):
 
     class Meta:
@@ -18,4 +19,5 @@ class PriceIndexForm(ModelForm):
         exclude = ['priceIndex_active', 'priceIndex_date']
         widgets = {'priceIndexValue': TextInput(attrs={'size': '2', 'placeholder': 'Раз', 'maxlength': '6'}),
         }
+
 
