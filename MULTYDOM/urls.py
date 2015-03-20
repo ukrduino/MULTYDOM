@@ -6,6 +6,7 @@ from django.conf import settings
 urlpatterns = patterns('',
                        url(r'^admin/', include(admin.site.urls)),
                        url(r'^cart/', include('cart.urls')),
+                       url(r'^management/', include('management.urls')),
                        url(r'^', include('store.urls')),
                        )
 

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load bootstrap3 %}
+
+{% block management %}
+    <div class="row order">
+        <div class="col-lg-3">
+            <h3>Последние 5 курсов</h3>
+            {% for dollar in dollar_archiv %}
+                <p>{{ dollar.dollar_date|date:"SHORT_DATE_FORMAT" }} - {{ dollar.dollar_to_hrn }} грн/долл</p>
+            {% endfor %}
+        </div>
+        <div class="col-lg-6">
+            <h4>C {{ dollar_active.dollar_date|date:"SHORT_DATE_FORMAT" }} весь товар оценен по курсу {{ dollar_active.dollar_to_hrn }} грн за 1 доллар</h4>
+            <form action='{% url 'newDollar' %}' method="post" class="form-inline" id="priceForm">
+                {% csrf_token %}
+                {% bootstrap_form form1 layout='inline'%}
+                <input id="addDollar" type="submit" class="btn btn-success" value="Переоценить товар">
+            </form>
+            <h4>C {{ index_active.priceIndex_date|date:"SHORT_DATE_FORMAT" }} весь товар c начальной ценой в гривне переоценен в {{ index_active.priceIndexValue }} раза</h4>
+            <form action='{% url 'newPriceIndex' %}' method="post" class="form-inline" id="priceForm">
+                {% csrf_token %}
+                {% bootstrap_form form2 %}
+                <input id="addDollar" type="submit" class="btn btn-success" value="Переоценить товар">
+            </form>
+            {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                            {% if 'success' in message.tags %}
+                                <div class="alert alert-success" role="alert">
+                                   {{ message }}
+                                </div>
+                            {% endif %}
+                            {% if 'error' in message.tags %}
+                                <div class="alert alert-danger" role="alert">
+                                   {{ message }}
+                                </div>
+                            {% endif %}
+                        {%  endfor %}
+                    </div>
+                {% endif %}
+        </div>
+        <div class="col-lg-3">
+            <h3>Последние 5 индексов</h3>
+            {% for index in index_archiv %}
+                <p>{{ index.priceIndex_date|date:"SHORT_DATE_FORMAT" }} - {{ index.priceIndexValue }} раз</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+{##}
+{#<form class="form-inline">#}
+{#  <div class="form-group">#}
+{#    <label for="exampleInputName2">Name</label>#}
+{#    <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">#}
+{#  </div>#}
+{#  <div class="form-group">#}
+{#    <label for="exampleInputEmail2">Email</label>#}
+{#    <input type="email" class="form-control" id="exampleInputEmail2" placeholder="jane.doe@example.com">#}
+{#  </div>#}
+{#  <button type="submit" class="btn btn-default">Send invitation</button>#}
+{#</form>#}
+{##}
+{#                <form action='{% url 'make_order' %}' method="post">#}
+{#                    {% csrf_token %}#}
+{#                    {% bootstrap_form form layout='inline'%}#}
+{#                    <input id="addOrder" type="submit" class="btn btn-success" value="Добавить заказ">#}
+{#                </form>#}

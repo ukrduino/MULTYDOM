@@ -235,11 +235,16 @@ input#id_captcha_1.form-control{
 #addOrder{
     display: inline-block;
 }
+
 .order{
     background: rgba(27, 36, 35, 0.58);
     color: #C9F2CA;
     text-align: center;
 }
+
+#priceForm {
+    padding: 25px;
+  }
 
 
 

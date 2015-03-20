@@ -1,0 +1,21 @@
+Для включения миграций!!!
+239-51-203-46:MULTYDOM Sergey$ cd ../
+239-51-203-46:PycharmProjects Sergey$ cd VENV
+239-51-203-46:VENV Sergey$ source bin/activate
+(VENV) 239-51-203-46:VENV Sergey$ cd ../
+(VENV) 239-51-203-46:PycharmProjects Sergey$ cd MULTYDOM
+(VENV) 239-51-203-46:MULTYDOM Sergey$ python manage.py makemigrations store
+Migrations for 'store':
+  0001_initial.py:
+    - Create model Category
+    - Create model Manufacturer
+    - Create model Product
+(VENV) 239-51-203-46:MULTYDOM Sergey$ python manage.py makemigrations cart
+Migrations for 'cart':
+  0001_initial.py:
+    - Create model Order
+(VENV) 239-51-203-46:MULTYDOM Sergey$ python manage.py makemigrations management
+Migrations for 'management':
+  0001_initial.py:
+    - Create model Dollar
+(VENV) 239-51-203-46:MULTYDOM Sergey$

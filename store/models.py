@@ -130,6 +130,8 @@ class Product(models.Model):
     productText = models.TextField(verbose_name='Описание товара', blank=False, max_length=500)
     productDate = models.DateTimeField(auto_now_add=True, verbose_name='Дата размещения', blank=False)
     productDateChange = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
+    productStartPrice = models.IntegerField(verbose_name='Начальная цена', default=0)
+    productStartPriceInDollars = models.BooleanField(verbose_name='Цена в долларах', default=False)
     productCurrentPrice = models.IntegerField(verbose_name='Текущая цена', default=0)
     productPresence = models.BooleanField(verbose_name='В наличии', default=True)
     productForOrder = models.BooleanField(verbose_name='Под заказ', default=False)
