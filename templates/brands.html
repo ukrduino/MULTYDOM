@@ -1,14 +1,24 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load mptt_tags %}
 
 
 
 {% block brands %}
-  <div class="col-lg-3" id="groupPanel">
-            <ul class="nav nav-tabs nav-stacked">
-               {% for brand in brands %}
-                    <li><a href="{% url 'brand_filter' brand.id %}">{{ brand.title}}</a></li>
-               {% endfor %}
+        <div class="col-lg-3" id="groupPanel">
+            <ul class="nav nav-pills nav-stacked" id="sideMenu">
+                {% recursetree nodes %}
+                    <li>
+                        <a href="{% url 'category_filter' node.id %}">{{ node.title }}</a>
+                            {% if not node.is_leaf_node %}
+                                <ul class="children">
+                                    <li>
+                                        {{ children }}
+                                    </li>
+                                </ul>
+                            {% endif %}
+                    </li>
+                {% endrecursetree %}
             </ul>
         </div>
         <div class="col-lg-9" id="prodPanel">

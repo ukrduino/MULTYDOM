@@ -9,6 +9,8 @@ from imagekit.processors import ResizeToFill
 # for validation
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ValidationError
+from mptt.models import MPTTModel, TreeForeignKey
+
 
 validation_message1 = 'Используйте квадратное изображение размером не менее 160 x 160 pixels'
 validation_message2 = 'Используйте изображение формата  JPEG или PNG.'
@@ -102,17 +104,22 @@ class Manufacturer(MainClass):
 
 #TODO - построение дерева категорий сделать только с использованием Django MPTT
 
-class Category(MainClass):
+class Category(MainClass, MPTTModel):
     class Meta():
         db_table = 'category'
         verbose_name = 'Товарная группа'
         verbose_name_plural = 'Товарные группы'
 
+    class MPTTMeta:
+        order_insertion_by = ['title']
 # http://stackoverflow.com/questions/16589069/foreignkey-does-not-allow-null-values
 # You must create a migration, where you will specify default value for a new field, since you don't want it to be null.
 # If null is not required, simply add null=True and create and run migration.
 
-    parentCategory = models.ForeignKey("Category", blank=True, null=True, verbose_name='Входит в группу')
+    # parentCategory = models.ForeignKey("Category", blank=True, null=True, verbose_name='Входит в группу')
+
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children',
+                                    verbose_name='Входит в группу')
 
 # http://stackoverflow.com/a/6379556/3177550
 # MainClass._meta.get_field('image').blank = True

@@ -250,6 +250,11 @@ input#id_captcha_1.form-control{
     padding: 25px;
   }
 
+#sideMenu.nav a {
+    background: rgba(92, 0, 6, 0.61);
+    color: #F2F2F2;
+    text-align: left;
+}
 
 
 
