@@ -1,19 +1,23 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {#{% load bootstrap3 %}#}
+{% load mptt_tags %}
 
 {% block product %}
         <div class="col-lg-3" id="groupPanel">
             <ul class="nav nav-pills nav-stacked" id="sideMenu">
-               {% for category in side_categories %}
-                    <li><a href="{% url 'category_filter' category.id %}">{{ category.title}}</a>
-                        <ul>
-                            <li><a href="#">1.1 Submenu</a></li>
-                            <li><a href="#">1.2 Submenu</a></li>
-                            <li><a href="#">1.3 Submenu</a></li>
-                        </ul>
+                {% recursetree nodes %}
+                    <li>
+                        <a href="{% url 'category_filter' node.id %}">{{ node.title }}</a>
+                            {% if not node.is_leaf_node %}
+                                <ul class="children">
+                                    <li>
+                                        {{ children }}
+                                    </li>
+                                </ul>
+                            {% endif %}
                     </li>
-               {% endfor %}
+                {% endrecursetree %}
             </ul>
         </div>
         <div class="col-lg-9" id="oneProdPanel">
