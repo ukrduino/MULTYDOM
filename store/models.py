@@ -1,8 +1,9 @@
 from django.db import models
 #TODO - избавиться от TRIM_PATH переделав алгоритм загрузки фото
-from MULTYDOM.settings import SITE_ADDR, STATICFILES_DIRS, TRIM_PATH
+from MULTYDOM.settings import SITE_ADDR, STATICFILES_DIRS, TRIM_PATH, TRIM_PATH_PROD_WIN, TRIM_PATH_WIN
 from PIL import Image
 import os
+import sys
 # for image resizing
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
@@ -39,22 +40,34 @@ class MainClass(models.Model):
 
     def __unicode__(self):
         return self.title
-
-    def pic(self):
-        if self.image:
-            return '%s/%s' % (SITE_ADDR, self.image.url[TRIM_PATH:])
-        else:
-            return '(none)'
-
+    if sys.platform.startswith('win32'):
+        def pic(self):
+            if self.image:
+                return '%s/%s' % (SITE_ADDR, self.image.url[TRIM_PATH_WIN:])
+            else:
+                return '(none)'
+    else:
+        def pic(self):
+            if self.image:
+                return '%s/%s' % (SITE_ADDR, self.image.url[TRIM_PATH:])
+            else:
+                return '(none)'
     pic.short_description = 'Изображение'
     pic.allow_tags = True
 
 # функция формирования пути к картинке объекта Product для отображения в админке
-    def admin_pic(self):
-        if self.image:
-            return '<img src="%s/%s"/>' % (SITE_ADDR, self.image.url[TRIM_PATH:])
-        else:
-            return '(none)'
+    if sys.platform.startswith('win32'):
+        def admin_pic(self):
+            if self.image:
+                return '<img src="%s/%s"/>' % (SITE_ADDR, self.image.url[TRIM_PATH_WIN:])
+            else:
+                return '(none)'
+    else:
+        def admin_pic(self):
+            if self.image:
+                return '<img src="%s/%s"/>' % (SITE_ADDR, self.image.url[TRIM_PATH:])
+            else:
+                return '(none)'
     admin_pic.short_description = 'Изображение'
     admin_pic.allow_tags = True
 
@@ -155,22 +168,41 @@ class Product(models.Model):
     productPhoto_thumb = models.CharField(max_length=255, blank=True, editable=False)
 
     # methods to return paths to the thumbnail, medium, and original images
-    def get_thumb(self):
-        return '<img src="%s/%s"/>' % (SITE_ADDR, self.productPhoto_thumb[TRIM_PATH:])
-    get_thumb.allow_tags = True
+    if sys.platform.startswith('win32'):
+        def get_thumb(self):
+            return '<img src="%s/%s"/>' % (SITE_ADDR, self.productPhoto_thumb[TRIM_PATH_PROD_WIN:])
+        get_thumb.allow_tags = True
 
-    def get_thumb_cart(self):
-        return '%s/%s' % (SITE_ADDR, self.productPhoto_thumb[TRIM_PATH:])
-    get_thumb.allow_tags = True
+        def get_thumb_cart(self):
+            return '%s/%s' % (SITE_ADDR, self.productPhoto_thumb[TRIM_PATH_PROD_WIN:])
+        get_thumb.allow_tags = True
 
-    def get_medium(self):
-        return '%s/%s' % (SITE_ADDR, self.productPhoto_medium[TRIM_PATH:])
-    get_medium.allow_tags = True
+        def get_medium(self):
+            return '%s/%s' % (SITE_ADDR, self.productPhoto_medium[TRIM_PATH_PROD_WIN:])
+        get_medium.allow_tags = True
 
-    def get_original(self):
+        def get_original(self):
 
-        return '%s/%s' % (SITE_ADDR, self.productPhoto_original.path[TRIM_PATH:])
-    get_original.allow_tags = True
+            return '%s/%s' % (SITE_ADDR, self.productPhoto_original.path[TRIM_PATH_PROD_WIN:])
+        get_original.allow_tags = True
+
+    else:
+        def get_thumb(self):
+            return '<img src="%s/%s"/>' % (SITE_ADDR, self.productPhoto_thumb[TRIM_PATH:])
+        get_thumb.allow_tags = True
+
+        def get_thumb_cart(self):
+            return '%s/%s' % (SITE_ADDR, self.productPhoto_thumb[TRIM_PATH:])
+        get_thumb.allow_tags = True
+
+        def get_medium(self):
+            return '%s/%s' % (SITE_ADDR, self.productPhoto_medium[TRIM_PATH:])
+        get_medium.allow_tags = True
+
+        def get_original(self):
+
+            return '%s/%s' % (SITE_ADDR, self.productPhoto_original.path[TRIM_PATH:])
+        get_original.allow_tags = True
 
     def delete(self, *args, **kwargs):
         self.productPhoto_original.delete(save=False)
@@ -210,23 +242,45 @@ class Product(models.Model):
         photo_path = str(self.productPhoto_original.path)  # this returns the full system path to the original file
         im = Image.open(photo_path)  # open the image using PIL
 
-        # pull a few variables out of that full path
-        # extension = photo_path.rsplit('.', 1)[1]  # the file extension
-        filename = photo_path.rsplit('/', 1)[1].rsplit('.', 1)[0]  # the file name only (minus path or extension)
-        full_path = photo_path.rsplit('/', 1)[0]  # the path only (minus the filename.extension)
+        print(sys.platform)
+        if sys.platform.startswith('win32'):
+            # win32-specific code here...
+            # pull a few variables out of that full path
+            # extension = photo_path.rsplit('.', 1)[1]  # the file extension
+            filename = photo_path.rsplit("\\", 1)[1].rsplit('.', 1)[0]  # the file name only (minus path or extension)
+            full_path = photo_path.rsplit("\\", 1)[0]  # the path only (minus the filename.extension)
 
-        # create medium image
-        im.thumbnail((sizes['medium']['width'], sizes['medium']['height']), Image.ANTIALIAS)
-        med_name = filename + "_" + str(sizes['medium']['width']) + "x" + str(sizes['medium']['height']) + ".jpg"
-        im.save(full_path + '/' + med_name)
-        self.productPhoto_medium = self.upload_path + med_name
+            # create medium image
+            im.thumbnail((sizes['medium']['width'], sizes['medium']['height']), Image.ANTIALIAS)
+            med_name = filename + "_" + str(sizes['medium']['width']) + "x" + str(sizes['medium']['height']) + ".jpg"
+            im.save(full_path + '\\' + med_name)
+            self.productPhoto_medium = self.upload_path + med_name
 
-        # create thumbnail
-        im.thumbnail((sizes['thumbnail']['width'], sizes['thumbnail']['height']), Image.ANTIALIAS)
-        thumb_name = filename + "_" + str(sizes['thumbnail']['width']) \
-                              + "x" + str(sizes['thumbnail']['height']) + ".jpg"
-        im.save(full_path + '/' + thumb_name)
-        self.productPhoto_thumb = self.upload_path + thumb_name
+            # create thumbnail
+            im.thumbnail((sizes['thumbnail']['width'], sizes['thumbnail']['height']), Image.ANTIALIAS)
+            thumb_name = filename + "_" + str(sizes['thumbnail']['width']) \
+                                  + "x" + str(sizes['thumbnail']['height']) + ".jpg"
+            im.save(full_path + '\\' + thumb_name)
+            self.productPhoto_thumb = self.upload_path + thumb_name
+
+        else:
+            # pull a few variables out of that full path
+            # extension = photo_path.rsplit('.', 1)[1]  # the file extension
+            filename = photo_path.rsplit('/', 1)[1].rsplit('.', 1)[0]  # the file name only (minus path or extension)
+            full_path = photo_path.rsplit('/', 1)[0]  # the path only (minus the filename.extension)
+
+            # create medium image
+            im.thumbnail((sizes['medium']['width'], sizes['medium']['height']), Image.ANTIALIAS)
+            med_name = filename + "_" + str(sizes['medium']['width']) + "x" + str(sizes['medium']['height']) + ".jpg"
+            im.save(full_path + '/' + med_name)
+            self.productPhoto_medium = self.upload_path + med_name
+
+            # create thumbnail
+            im.thumbnail((sizes['thumbnail']['width'], sizes['thumbnail']['height']), Image.ANTIALIAS)
+            thumb_name = filename + "_" + str(sizes['thumbnail']['width']) \
+                                  + "x" + str(sizes['thumbnail']['height']) + ".jpg"
+            im.save(full_path + '/' + thumb_name)
+            self.productPhoto_thumb = self.upload_path + thumb_name
 
         super(Product, self).save(*args, **kwargs)
 
