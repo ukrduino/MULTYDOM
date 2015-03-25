@@ -14,7 +14,7 @@ def product(request, product_id=1):
 
 
 def actions(request):
-    return render_to_response('actions.html', )
+    return render_to_response('actions.html', context_instance=RequestContext(request))
 
 
 def categories(request):
@@ -59,27 +59,14 @@ def brand_filter(request, brand_id):
     args = dict()
     args['SITE_ADDR'] = SITE_ADDR
     args['products'] = Product.objects.filter(productManufacturer_id=brand_id)
+    args['nodes'] = Category.objects.all()
 
     return render_to_response('products.html', args, context_instance=RequestContext(request))
 
 
 def docs(request):
-    return render_to_response('docs.html',)
+    return render_to_response('docs.html', context_instance=RequestContext(request))
 
 
 def about(request):
-    return render_to_response('about.html',)
-
-
-# def category_page(request, category_id):
-#     #getting detail information about current object
-#     current_category = Category.objects.get(id=category_id)
-#     root_category_id = current_category.get_root().id
-#     #render
-#     return render_to_response("category_page.html",
-#                           {
-#                               'nodes':Category.objects.all(),
-#                               'current_category':current_category,
-#                               'root_category_id':root_category_id
-#                           },
-#                           context_instance=RequestContext(request))
+    return render_to_response('about.html', context_instance=RequestContext(request))

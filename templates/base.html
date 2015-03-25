@@ -40,7 +40,7 @@
                     <li><a href="{% url 'brands' %}">Брэнды</a></li>
                     <li><a href="{% url 'docs' %}">Информация</a></li>
                     <li><a href="{% url 'about' %}">О нас</a></li>
-                    <li><a href="{% url 'my_cart' %}">Корзина {% if request.session.cart_qwt_of_prods %} <span class="badge"> {{ request.session.cart_qwt_of_prods }}</span>{% endif %}</a></li>
+                    <li><a href="{% url 'my_cart' %}">Корзина {% if request.session.cart_qwt_of_prods %} <span class="badge" id="CartBadge"> {{ request.session.cart_qwt_of_prods }}</span>{% endif %}</a></li>
             </ul>
             {% block actions %}{% endblock %}
             {% block categories %}{% endblock %}

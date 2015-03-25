@@ -67,9 +67,12 @@ def newPriceIndex(request):
         if form.is_valid():
             add = form.save(commit=False)
             try:
-                last_index = PriceIndex.objects.get(priceIndex_active=True)
-                last_index.priceIndex_active = False
-                last_index.save()
+                try:
+                    last_index = PriceIndex.objects.get(priceIndex_active=True)
+                    last_index.priceIndex_active = False
+                    last_index.save()
+                except:
+                    pass
                 add.save()
                 if add.priceIndex_fromStartPrice:
                     newPrice1(add.priceIndexValue, True)
