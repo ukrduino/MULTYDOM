@@ -40,12 +40,11 @@ def newDollar(request):
                 last_dollar = Dollar.objects.get(dollar_active=True)
                 last_dollar.dollar_active = False
                 last_dollar.save()
-                add.save()
-                newPrice(add.dollar_to_hrn)
-                messages.success(request, 'Товар успешно переоценен')
-
             except:
                 pass
+            add.save()
+            newPrice(add.dollar_to_hrn)
+            messages.success(request, 'Товар успешно переоценен')
         else:
             messages.error(request, 'Курс не изменен!!! Проверьте правильность введения '
                                     'данных и повторите. Вводить только цифры через точку! Не через запятую!')

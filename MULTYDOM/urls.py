@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.conf import settings
+import sys
 
 
 urlpatterns = patterns('',
@@ -13,8 +14,9 @@ urlpatterns = patterns('',
 urlpatterns += patterns('', url(r'^captcha/', include('captcha.urls')),)
 
 # comment on pythonanywhere
-if settings.DEBUG:
-    import debug_toolbar
-    urlpatterns += patterns('',
-        url(r'^__debug__/', include(debug_toolbar.urls)),
-    )
+if not sys.platform.startswith('linux'):
+    if settings.DEBUG:
+        import debug_toolbar
+        urlpatterns += patterns('',
+            url(r'^__debug__/', include(debug_toolbar.urls)),
+        )

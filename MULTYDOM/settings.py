@@ -1,18 +1,23 @@
 import os
+import sys
+
+TRIM_PATH = 0
+TRIM_PATH_PROD = 0
+SITE_ADDR = "http://127.0.0.1:8000"
+
+if sys.platform.startswith('win32'):
+    TRIM_PATH = 30
+    TRIM_PATH_PROD = 28
+if sys.platform.startswith('linux'):
+    TRIM_PATH = 24
+    SITE_ADDR = "http://multydom.pythonanywhere.com/"
+if sys.platform.startswith('darwin'):
+    TRIM_PATH = 39
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-
-# change on pythonanywhere
-
-SITE_ADDR = "http://127.0.0.1:8000" # менять на "http://multydom.pythonanywhere.com/"
-
-TRIM_PATH = 24
-
-TRIM_PATH_WIN = 30
-
-TRIM_PATH_PROD_WIN = 28
 
 SECRET_KEY = 'ir2u0zd7gpxfad@d5eocvwdn0ulmb@9*k)^4*whtupzyo$qcca'
 
@@ -21,9 +26,6 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
-
-
-# Application definition
 
 INSTALLED_APPS = (
     'django_admin_bootstrapped',
@@ -34,18 +36,20 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'store',
+    'management',
+    'cart',
     #http://django-imagekit.readthedocs.org/en/latest/
     'imagekit',
-    'cart',
     'bootstrap3',
     'captcha',
-    # comment on pythonanywhere
-    'debug_toolbar',
-    'management',
     'mptt',
 )
 
+DEBUG_APPS = ('debug_toolbar',)
 
+if not sys.platform.startswith('linux'):
+    if DEBUG:
+        INSTALLED_APPS += DEBUG_APPS
 
 MIDDLEWARE_CLASSES = (
 
