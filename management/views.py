@@ -29,7 +29,6 @@ def management(request):
         return redirect('user_login')
 
 
-
 def newDollar(request):
 
     if request.POST:
@@ -97,10 +96,6 @@ def newPrice1(index, fromStartPrice):
         else:
             prod.productCurrentPrice = int(prod.productCurrentPrice * index)
             prod.save()
-
-
-
-
 
 
 def user_login(request):

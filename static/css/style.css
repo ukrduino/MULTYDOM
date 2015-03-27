@@ -256,5 +256,21 @@ input#id_captcha_1.form-control{
     text-align: left;
 }
 
+.thumbnail {
+    height: 400px;
 
+}
+
+.thumbnail >h4 {
+    padding-left: 4px;
+    height: 38px;
+}
+
+.thumbnail .caption {
+    height: 175px;
+
+}
+.thumbnail .caption > p {
+    vertical-align: bottom;
+}
 
