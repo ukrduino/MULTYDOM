@@ -139,9 +139,9 @@ class Product(models.Model):
     productCurrentPrice = models.IntegerField(verbose_name='Текущая цена', default=0)
     productPresence = models.BooleanField(verbose_name='В наличии', default=True)
     productForOrder = models.BooleanField(verbose_name='Под заказ', default=False)
-    productSize = models.CharField(verbose_name='Размер', blank=True, max_length=100)
-    productManufacturer = models.ForeignKey(Manufacturer)
-    productCategory = models.ForeignKey(Category)
+    productSize = models.CharField(verbose_name='Размер(без слова "размер")', blank=True, max_length=100)
+    productManufacturer = models.ForeignKey(Manufacturer, verbose_name='Производитель')
+    productCategory = models.ForeignKey(Category, verbose_name='Категория товара')
 
 # http://www.mechanicalgirl.com/view/image-resizing-file-uploads-doing-it-easy-way/
     upload_path = '%s/products/' % STATICFILES_DIRS

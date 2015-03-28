@@ -27,14 +27,23 @@
         {% else %}
             <div class="col-lg-9" id="prodPanel">
               {% for prod in products %}
-                <div class="col-lg-4" id="productsListCol">
-                    <div class="thumbnail product">
+                <div class="col-lg-12" id="productsListItem">
+                    <div class="col-lg-4">
                         <img src="{{ prod.get_medium }}" alt="{{ prod.productTitle }}">
-                        <h4>{{ prod.productTitle|truncatechars:40 }}</h4>
+                    </div>
+                    <div class="col-lg-8">
+                        <h4>{{ prod.productTitle|truncatechars:37 }} {% if prod.productSize %}(размер: {{ prod.productSize }}){% endif %}</h4>
                         <div class="caption">
-                        <p>{{ prod.productText|truncatechars:100 }}</p>
-                        <p class="price">Цена: {{ prod.productCurrentPrice }} грн </p>
-                        <p><a href="{% url 'product' prod.id %}" class="btn btn-primary" role="button">Подробнее</a> <a href="{% url 'add_main' prod.id %}" class="btn btn-success" role="button">Купить</a></p>
+                        <p>{{ prod.productText|truncatechars:230 }}</p>
+                        <p class="price">
+                            {% if prod.productPresence %}
+                                <span style="color: green"> В наличии, </span>   цена: {{ prod.productCurrentPrice }} грн <a href="{% url 'product' prod.id %}" class="btn btn-primary" role="button">Подробнее</a> <a href="{% url 'add_main' prod.id %}" class="btn btn-success" role="button">Купить</a></p>
+                            {% elif prod.productForOrder%}
+                                <span style="color: blue"> Под заказ,  </span> цена: {{ prod.productCurrentPrice }} грн <a href="{% url 'product' prod.id %}" class="btn btn-primary" role="button">Подробнее</a> <a href="{% url 'add_main' prod.id %}" class="btn btn-success" role="button">Купить</a></p>
+                            {% else %}
+                                <span style="color: #000000"> Недоступно </span>
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>

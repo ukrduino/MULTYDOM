@@ -20,7 +20,7 @@
                                             <img src="{{ prod.get_thumb_cart }}" alt="{{ prod.productTitle }}">
                                         </div>
                                         <div class="col-lg-5">
-                                            <a href="{% url 'product' prod.id %}">{{ prod.productTitle }}</a>
+                                            <a href="{% url 'product' prod.id %}">{{ prod.productTitle|truncatechars:55 }} {% if prod.productSize %}(размер: {{ prod.productSize }}){% endif %}</a>
                                             <p id="cartPrice">Цена за ед.: {{ prod.productCurrentPrice }} грн</p>
                                         </div>
                                         <div class="col-lg-1">

@@ -206,7 +206,13 @@ def ordered_products_titles(grouped_prods_in_cart):
     dict2 = {}
     for key in dict1.keys():
         product = Product.objects.get(id=int(key))
-        dict2[product.productTitle] = dict1[key]
+        title_and_size = ""
+        if product.productSize:
+            title_and_size = product.productTitle + '(резмер %s)' % product.productSize
+        else:
+            title_and_size = product.productTitle
+
+        dict2[title_and_size] = dict1[key]
 
     order_products_formated_str = ""
 

@@ -14,7 +14,8 @@ body {
 
 .nav-tabs.nav-justified>li>a,
 .nav-tabs.nav-stacked>li>a {
-    background: rgba(92, 0, 6, 0.61);
+    /*background: rgba(92, 0, 6, 0.61);*/
+    background: rgba(67, 23, 14, 0.81);
     color: #ffffff;
     margin: 3%;
 }
@@ -68,7 +69,8 @@ body {
 }
 
 #topText{
-    background: rgba(92, 0, 6, 0.61);
+    /*background: rgba(92, 0, 6, 0.61);*/
+    background: rgba(67, 23, 14, 0.81);
     color: #E7E6DF;
     text-align: center;
 
@@ -82,14 +84,25 @@ body {
     margin-top: 100px;
 }
 
-#productsListCol{
+#productsListItem{
     padding: 5px;
+    background: rgba(67, 23, 14, 0.81);
+    color: #C1CAC5;
+
+}
+#productsListItem .col-lg-8 > h4{
+       color: rgb(231, 182, 122);
 }
 
-#productsListCol > img{
-    width: 216px;
-    height: 162px;
+.col-lg-4 > img{
+    border-radius: 5px;
 }
+/*#productsListImg.img{*/
+    /*width: 216px;*/
+    /*height: 162px;*/
+    /*border-radius: 5px;*/
+
+/*}*/
 
 .caption > h3{
     margin-top: 0;
@@ -98,7 +111,9 @@ body {
     margin-bottom: 0;
 }
 .caption > p.price{
-    color: red;
+    color: #6bbbe1;
+    font-size: 18px;
+    text-align: right;
 }
 
 #oneProdPanel > p{
@@ -109,7 +124,8 @@ body {
     text-align: center;
     color: #C1CAC5;
     font-size: 14px;
-    background: rgba(92, 0, 6, 0.61);
+    background: rgba(67, 23, 14, 0.81);
+    /*background: rgba(92, 0, 6, 0.61);*/
     padding: 0;
     border-radius: 5px;
 }
@@ -150,7 +166,8 @@ body {
 
 #emptyCart .well{
     text-align: center;
-    background: rgba(92, 0, 6, 0.61);
+    /*background: rgba(92, 0, 6, 0.61);*/
+    background: rgba(67, 23, 14, 0.81);
     color: #ffffff;
     font-size: 16px;
     font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace ;
@@ -158,7 +175,8 @@ body {
 
 #CartBadge {
     border-radius: 7px;
-    background-color: blue;
+    background-color: rgb(74, 74, 199);
+    font-size: 12px;
 }
 
 #cartProdRow{
@@ -169,7 +187,8 @@ body {
 #cartItems{
     padding: 0;
     color: #ffffff;
-    background: rgba(92, 0, 6, 0.61);
+    background: rgba(67, 23, 14, 0.81);
+    /*background: rgba(92, 0, 6, 0.61);*/
     margin: 0;
     border-radius: 5px;
 
@@ -212,7 +231,8 @@ body {
     margin: 0;
     padding-left: 15px;
     padding-right: 0;
-    background: rgba(92, 0, 6, 0.61);
+    /*background: rgba(92, 0, 6, 0.61);*/
+    background: rgba(67, 23, 14, 0.81);
     border-radius: 5px;
     text-align: right;
     padding-bottom: 10px;
@@ -251,7 +271,8 @@ input#id_captcha_1.form-control{
   }
 
 #sideMenu.nav a {
-    background: rgba(92, 0, 6, 0.61);
+    /*background: rgba(92, 0, 6, 0.61);*/
+    background: rgba(67, 23, 14, 0.81);
     color: #F2F2F2;
     text-align: left;
 }
