@@ -21,3 +21,4 @@ class PriceIndexForm(ModelForm):
         }
 
 
+# test
