@@ -97,8 +97,8 @@ class Manufacturer(MainClass):
         verbose_name = 'Производитель'
         verbose_name_plural = 'Производители'
 
-    manufacturerText = models.TextField(max_length=1000, verbose_name='Описание производителя')
-    manufacturerCountry = models.CharField(max_length=50, verbose_name='Страна производства', blank=False)
+    manufacturerText = models.TextField(max_length=1000, verbose_name='Описание производителя', blank=True)
+    manufacturerCountry = models.CharField(max_length=50, verbose_name='Страна производства', blank=True)
 
 
 class Category(MainClass, MPTTModel):
