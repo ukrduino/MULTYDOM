@@ -1,9 +1,11 @@
 from django.contrib import admin
 from store.models import *
+from ckeditor.widgets import CKEditorWidget
 
 
 # класс для перенастройки отображения класса Product в админке
 class ProductAdmin(admin.ModelAdmin):
+
     # из поля product_title транслитом заполняется поле product_slug
     prepopulated_fields = {'productSlug': ('productTitle',)}
     # возможность просматривать записи Product в виде таблицы

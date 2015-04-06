@@ -107,4 +107,7 @@ docs/_build/
 target/
 
 *.sqlite3
-
+migrations/
+CKEDITOR/
+other/
+products/

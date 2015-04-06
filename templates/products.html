@@ -34,7 +34,7 @@
                     <div class="col-lg-8">
                         <h4>{{ prod.productTitle|truncatechars:37 }} {% if prod.productSize %}(размер: {{ prod.productSize }}){% endif %}</h4>
                         <div class="caption">
-                        <p>{{ prod.productText|truncatechars:230 }}</p>
+                        <p>{{ prod.productText|truncatechars:230|safe }}</p>
                         <p class="price">
                             {% if prod.productPresence %}
                                 <span style="color: green"> В наличии, </span>   цена: {{ prod.productCurrentPrice }} грн <a href="{% url 'product' prod.id %}" class="btn btn-primary" role="button">Подробнее</a> <a href="{% url 'add_main' prod.id %}" class="btn btn-success" role="button">Купить</a></p>

@@ -9,6 +9,7 @@ urlpatterns = patterns('',
                        url(r'^cart/', include('cart.urls')),
                        url(r'^management/', include('management.urls')),
                        url(r'^', include('store.urls')),
+                       url(r'^ckeditor/', include('ckeditor.urls')),
                        )
 
 urlpatterns += patterns('', url(r'^captcha/', include('captcha.urls')),)

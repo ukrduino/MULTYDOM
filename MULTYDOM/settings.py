@@ -19,6 +19,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
+CKEDITOR_UPLOAD_PATH = '%s/CKEDITOR' % STATICFILES_DIRS
+
+CKEDITOR_IMAGE_BACKEND = "pillow"
+
+CKEDITOR_CONFIGS = {'small': {'toolbar': 'Basic', }, 'default': {'toolbar': 'Full', 'height': 300, 'width': 700, }, }
+
 SECRET_KEY = 'ir2u0zd7gpxfad@d5eocvwdn0ulmb@9*k)^4*whtupzyo$qcca'
 
 DEBUG = True
@@ -43,6 +49,7 @@ INSTALLED_APPS = (
     'bootstrap3',
     'captcha',
     'mptt',
+    'ckeditor',
 )
 
 DEBUG_APPS = ('debug_toolbar',)
