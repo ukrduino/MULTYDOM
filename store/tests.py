@@ -15,7 +15,7 @@ class MainPage(unittest.TestCase):
     def test_title(self):
         driver = self.driver
         driver.get(self.base_url + "/")
-        self.assertEqual(u"MultyDOM - лучшие товары для дома!!!", driver.find_element_by_id("topText").text)
+        self.assertEqual("MultyDOM - лучшие товары для дома!!!", driver.find_element_by_id("topText").text)
 
     def tearDown(self):
         self.driver.quit()
