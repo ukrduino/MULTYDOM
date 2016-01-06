@@ -11,7 +11,7 @@ from imagekit.processors import ResizeToFill
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ValidationError
 from mptt.models import MPTTModel, TreeForeignKey
-from ckeditor.fields import RichTextField
+# from ckeditor.fields import RichTextField
 
 
 validation_message1 = 'Используйте квадратное изображение размером не менее 160 x 160 pixels'
@@ -132,7 +132,7 @@ class Product(models.Model):
 
     productTitle = models.CharField(max_length=100, verbose_name='Название товара', blank=False, unique=True)
     productSlug = models.CharField(max_length=100, verbose_name='URL')
-    productText = RichTextField(verbose_name='Описание товара', blank=False)
+    # productText = RichTextField(verbose_name='Описание товара', blank=False)
     productDate = models.DateTimeField(auto_now_add=True, verbose_name='Дата размещения', blank=False)
     productDateChange = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
     productStartPrice = models.IntegerField(verbose_name='Начальная цена', default=0)

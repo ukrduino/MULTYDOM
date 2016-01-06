@@ -19,12 +19,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
-CKEDITOR_UPLOAD_PATH = '%s/CKEDITOR' % STATICFILES_DIRS
-
-CKEDITOR_IMAGE_BACKEND = "pillow"
-
-CKEDITOR_CONFIGS = {'small': {'toolbar': 'Basic', }, 'default': {'toolbar': 'Full', 'height': 300, 'width': 700, }, }
-
 SECRET_KEY = 'ir2u0zd7gpxfad@d5eocvwdn0ulmb@9*k)^4*whtupzyo$qcca'
 
 DEBUG = True
@@ -141,8 +135,3 @@ CAPTCHA_LETTER_ROTATION = (-5, 5)
 CAPTCHA_BACKGROUND_COLOR = 'white'
 CAPTCHA_FOREGROUND_COLOR = '#000'
 CAPTCHA_NOISE_FUNCTIONS = ()
-
-# multydom.pythonanywhere.com
-# sasha
-# multydom2015@gmail.com
-# sashailina

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from store.models import *
-from ckeditor.widgets import CKEditorWidget
+# from ckeditor.widgets import CKEditorWidget
 
 
 # класс для перенастройки отображения класса Product в админке
