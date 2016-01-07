@@ -4,36 +4,33 @@
 
 {% block cart %}
     <div class="row">
-        {% if not request.session.cart_qwt_of_prods%}
+        {% if not request.session.cart_qwt_of_prods %}
             <div class="col-lg-12" id="emptyCart">
                 <div class="well">В вашей корзине пока ничего нет :(</div>
             </div>
         {% else %}
             <div class="col-lg-6" id="cartItems">
                 <ul class="list-group" id="cartItemsList">
-                    {% for key, value in request.session.grouped_prods_in_cart.items %}
-                        {% for prod in products %}
-                            {% if prod.id|slugify  == key %}
-                                <li class="list-group-item">
-                                    <div class="row" id="cartProdRow">
-                                        <div class="col-lg-4">
-                                            <img src="{{ prod.get_thumb_cart }}" alt="{{ prod.productTitle }}">
-                                        </div>
-                                        <div class="col-lg-5">
-                                            <a href="{% url 'product' prod.id %}">{{ prod.productTitle|truncatechars:55 }} {% if prod.productSize %}(размер: {{ prod.productSize }}){% endif %}</a>
-                                            <p id="cartPrice">Цена за ед.: {{ prod.productCurrentPrice }} грн</p>
-                                        </div>
-                                        <div class="col-lg-1">
-                                            {{ value }}
-                                        </div>
-                                        <div class="col-lg-2">
-                                            <a href="{% url 'rem' prod.id %}" class="btn btn-sm btn-danger"><strong>-</strong></a>
-                                            <a href="{% url 'add' prod.id %}" class="btn btn-sm btn-success"><strong>+</strong></a>
-                                        </div>
-                                    </div>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
+                    {% for product, quantity in grouped_prods_in_cart_dict.items %}
+                        <li class="list-group-item">
+                            <div class="row" id="cartProdRow">
+                                <div class="col-lg-4">
+                                    <img src="{{ product.get_thumb_cart }}" alt="{{ product.productTitle }}">
+                                </div>
+                                <div class="col-lg-5">
+                                    <a href="{% url 'product' product.id %}">{{ product.productTitle|truncatechars:55 }}
+                                        {% if product.productSize %}(размер: {{ product.productSize }}){% endif %}</a>
+                                    <p id="cartPrice">Цена за ед.: {{ product.productCurrentPrice }} грн</p>
+                                </div>
+                                <div class="col-lg-1">
+                                    {{ quantity }}
+                                </div>
+                                <div class="col-lg-2">
+                                    <a href="{% url 'rem' product.id %}" class="btn btn-sm btn-danger"><strong>-</strong></a>
+                                    <a href="{% url 'add' product.id %}" class="btn btn-sm btn-success"><strong>+</strong></a>
+                                </div>
+                            </div>
+                        </li>
                     {% endfor %}
                 </ul>
                 <div class="row">
@@ -55,12 +52,12 @@
                                    {{ message }}
                                 </div>
                             {% endif %}
-                        {%  endfor %}
+                        {% endfor %}
                     </div>
                 {% endif %}
                 <form action='{% url 'make_order' %}' method="post">
                     {% csrf_token %}
-                    {% bootstrap_form form layout='inline'%}
+                    {% bootstrap_form form layout='inline' %}
                     <input id="addOrder" type="submit" class="btn btn-success" value="Добавить заказ">
                 </form>
             </div>

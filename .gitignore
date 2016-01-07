@@ -1,5 +1,3 @@
-
-
-*.iml
+/MULTYDOM/local_settings_multydom.py
 
 .idea/

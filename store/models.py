@@ -1,6 +1,6 @@
 from django.db import models
 #TODO - избавиться от TRIM_PATH переделав алгоритм загрузки фото
-from MULTYDOM.settings import SITE_ADDR, STATICFILES_DIRS, TRIM_PATH, TRIM_PATH_PROD
+from MULTYDOM.settings import SITE_ADDR, TRIM_PATH, TRIM_PATH_PROD, MEDIA_ROOT
 from PIL import Image
 import os
 import sys
@@ -30,7 +30,7 @@ class MainClass(models.Model):
     title = models.CharField(max_length=100, verbose_name='Название', blank=False, unique=True)
     slug = models.CharField(max_length=100, verbose_name='URL')
     #TODO - сделать переименование файлов при загрузке с использованием slug
-    upload_path = '%s/other' % STATICFILES_DIRS
+    upload_path = os.path.join(MEDIA_ROOT, 'other')
     image = ProcessedImageField(upload_to=upload_path,
                                 processors=[ResizeToFill(160, 160)],
                                 format='JPEG')
@@ -44,7 +44,7 @@ class MainClass(models.Model):
 
     def pic(self):
         if self.image:
-            return '%s/%s' % (SITE_ADDR, self.image.url[TRIM_PATH:])
+            return '<img src="%s/%s"/>' % (SITE_ADDR, self.image.url)
         else:
             return '(none)'
     pic.short_description = 'Изображение'
@@ -54,7 +54,7 @@ class MainClass(models.Model):
 
     def admin_pic(self):
         if self.image:
-            return '<img src="%s/%s"/>' % (SITE_ADDR, self.image.url[TRIM_PATH:])
+            return '<img src="%s%s">' % (SITE_ADDR, self.image.url)
         else:
             return '(none)'
     admin_pic.short_description = 'Изображение'
@@ -93,7 +93,7 @@ class MainClass(models.Model):
 
 
 class Manufacturer(MainClass):
-    class Meta():
+    class Meta:
         db_table = 'manufacturer'
         verbose_name = 'Производитель'
         verbose_name_plural = 'Производители'
@@ -103,24 +103,16 @@ class Manufacturer(MainClass):
 
 
 class Category(MainClass, MPTTModel):
-    class Meta():
+    class Meta:
         db_table = 'category'
         verbose_name = 'Товарная группа'
         verbose_name_plural = 'Товарные группы'
 
     class MPTTMeta:
         order_insertion_by = ['title']
-# http://stackoverflow.com/questions/16589069/foreignkey-does-not-allow-null-values
-# You must create a migration, where you will specify default value for a new field, since you don't want it to be null.
-# If null is not required, simply add null=True and create and run migration.
-
-    # parentCategory = models.ForeignKey("Category", blank=True, null=True, verbose_name='Входит в группу')
 
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children',
-                                    verbose_name='Входит в группу')
-
-# http://stackoverflow.com/a/6379556/3177550
-# MainClass._meta.get_field('image').blank = True
+                            verbose_name='Входит в группу')
 
 
 #TODO - а как начет нескольких картинок товара???
@@ -145,7 +137,7 @@ class Product(models.Model):
     productCategory = models.ForeignKey(Category, verbose_name='Категория товара')
 
 # http://www.mechanicalgirl.com/view/image-resizing-file-uploads-doing-it-easy-way/
-    upload_path = '%s/products/' % STATICFILES_DIRS
+    upload_path = os.path.join(MEDIA_ROOT, 'products')
     productPhoto_original = ProcessedImageField(upload_to=upload_path,
                                                 processors=[ResizeToFill(400, 300)],
                                                 verbose_name='Фото товара формат (выс4*шир3)')

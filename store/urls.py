@@ -1,15 +1,15 @@
 from django.conf.urls import patterns, url
+from store.views import *
 
-urlpatterns = patterns('',
-
-                       url(r'^$', 'store.views.actions',  name="actions"),
-                       url(r'^categories/$', 'store.views.categories',  name="categories"),
-                       url(r'^brands/$', 'store.views.brands',  name="brands"),
-                       url(r'^categories/filter/(?P<category_id>\d+)$', 'store.views.category_filter',
-                           name='category_filter'),
-                       url(r'^brands/filter/(?P<brand_id>\d+)$', 'store.views.brand_filter',
-                           name='brand_filter'),
-                       url(r'^product/(?P<product_id>\d+)$', 'store.views.product',  name="product"),
-                       url(r'^docs/$', 'store.views.docs',  name="docs"),
-                       url(r'^about/$', 'store.views.about',  name="about"),
-                       )
+urlpatterns = [
+               url(r'^$', actions,  name="actions"),
+               url(r'^categories/$', categories,  name="categories"),
+               url(r'^brands/$', brands,  name="brands"),
+               url(r'^categories/filter/(?P<category_id>\d+)$', category_filter,
+                   name='category_filter'),
+               url(r'^brands/filter/(?P<brand_id>\d+)$', brand_filter,
+                   name='brand_filter'),
+               url(r'^product/(?P<product_id>\d+)$', product,  name="product"),
+               url(r'^docs/$', docs,  name="docs"),
+               url(r'^about/$', about,  name="about"),
+               ]

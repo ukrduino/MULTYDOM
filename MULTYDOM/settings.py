@@ -1,29 +1,19 @@
 import os
 import sys
-
-TRIM_PATH = 0
-TRIM_PATH_PROD = 0
-SITE_ADDR = "http://127.0.0.1:8000"
-
-if sys.platform.startswith('win32'):
-    TRIM_PATH = 30
-    TRIM_PATH_PROD = 28
-if sys.platform.startswith('linux'):
-    TRIM_PATH = 24
-    SITE_ADDR = "http://multydom.pythonanywhere.com/"
-if sys.platform.startswith('darwin'):
-    TRIM_PATH = 39
+from MULTYDOM.local_settings_multydom import *
 
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
-SECRET_KEY = 'ir2u0zd7gpxfad@d5eocvwdn0ulmb@9*k)^4*whtupzyo$qcca'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+CKEDITOR_UPLOAD_PATH = os.path.join(MEDIA_ROOT, 'from_CKEDITOR')
 
 DEBUG = True
-
-TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -38,7 +28,7 @@ INSTALLED_APPS = (
     'store',
     'management',
     'cart',
-    #http://django-imagekit.readthedocs.org/en/latest/
+    # http://django-imagekit.readthedocs.org/en/latest/
     'imagekit',
     'bootstrap3',
     'captcha',
@@ -46,15 +36,8 @@ INSTALLED_APPS = (
     'ckeditor',
 )
 
-DEBUG_APPS = ('debug_toolbar',)
-
-if not sys.platform.startswith('linux'):
-    if DEBUG:
-        INSTALLED_APPS += DEBUG_APPS
 
 MIDDLEWARE_CLASSES = (
-
-    'debug_toolbar.middleware.DebugToolbarMiddleware',  # comment on pythonanywhere
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -62,15 +45,42 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
 )
+
+DEBUG_APPS = ('debug_toolbar',)
+DEBUG_MIDDLEWARE_CLASSES = ('debug_toolbar.middleware.DebugToolbarMiddleware',)
+
+
+if not sys.platform.startswith('linux'):
+    if DEBUG:
+        INSTALLED_APPS += DEBUG_APPS
+        MIDDLEWARE_CLASSES = DEBUG_MIDDLEWARE_CLASSES + MIDDLEWARE_CLASSES
 
 ROOT_URLCONF = 'MULTYDOM.urls'
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),
+                 ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+SESSION_SAVE_EVERY_REQUEST = True
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
 WSGI_APPLICATION = 'MULTYDOM.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
 DATABASES = {
     'default': {
@@ -78,9 +88,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
-# Internationalization
-# https://docs.djangoproject.com/en/1.7/topics/i18n/
 
 LANGUAGE_CODE = 'ru-ru'
 
@@ -92,46 +99,5 @@ USE_L10N = True
 
 USE_TZ = True
 
-STATIC_URL = '/static/'
-
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR,  'templates'),
-)
-
 # https://github.com/django-admin-bootstrapped/django-admin-bootstrapped
 DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'
-#
-#
-# #In your templates, load the bootstrap3 library and use the bootstrap_* tags
-# #https://github.com/dyve/django-bootstrap3
-#
-#
-#  доступ к сессии из шаблона
-TEMPLATE_CONTEXT_PROCESSORS = (  # http://stackoverflow.com/questions/2551933/
-                                 # django-accessing-session-variables-from-within-a-template
-    'django.core.context_processors.request',
-    # 'django.core.context_processors.media',
-    # 'django.core.context_processors.static',
-    'django.contrib.messages.context_processors.messages',
-    'django.contrib.auth.context_processors.auth'
-)
-SESSION_SAVE_EVERY_REQUEST = True
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'multydom2015@gmail.com'
-EMAIL_HOST_PASSWORD = 'sashailina1'
-EMAIL_USE_TLS = True
-# отправитель магазин
-DEFAULT_FROM_EMAIL = "multydom2015@gmail.com"
-# получатель хозяин/менеджер магазина
-DEFAULT_TO_EMAIL = 'vlasov_com@mail.ru'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-#CAPTCHA_FONT_SIZE ='30'
-CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
-CAPTCHA_LETTER_ROTATION = (-5, 5)
-CAPTCHA_BACKGROUND_COLOR = 'white'
-CAPTCHA_FOREGROUND_COLOR = '#000'
-CAPTCHA_NOISE_FUNCTIONS = ()

@@ -4,6 +4,9 @@ from captcha.fields import CaptchaField
 
 
 class OrderForm(ModelForm):
+    """
+    форма заказа
+    """
     captcha = CaptchaField()
 
     class Meta:
@@ -16,4 +19,3 @@ class OrderForm(ModelForm):
                    'order_code',
                    'order_discount',
                    'order_sum']
-

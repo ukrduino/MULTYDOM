@@ -1,31 +1,34 @@
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import redirect, render
 from store.models import Product
 from cart.models import Order
 from django.http.response import HttpResponseRedirect
 from cart.forms import OrderForm
-from django.template import RequestContext
 from django.core.mail import send_mail
 from django.contrib import messages
 from MULTYDOM.settings import DEFAULT_FROM_EMAIL, SITE_ADDR, DEFAULT_TO_EMAIL
 
 
-#TODO всю корзину сделать на Ajax
-
-
 def add_to_cart_main(request, product_id=1):
-
-    if request.session.get('prods_in_cart'):
-        prods_in_cart = request.session.get('prods_in_cart')
-        prods_in_cart.append(product_id)
-        request.session['prods_in_cart'] = prods_in_cart
-        group_prods_in_cart(request, prods_in_cart)
+    """
+    :param request:
+    :param str product_id:
+    Добавить товар в корзину
+    Добавляет id выбранного товара в в список выбранных товаров в переменной request.session.get('prods_in_cart') .
+    Увеличивает счетчик товаров в корзине request.session['cart_qwt_of_prods'].
+    Добавляет к общей сумме заказов стоимость выбранного товара.
+    """
+    if request.session.get('prods_in_cart_ids_list'):
+        prods_in_cart_ids_list = request.session.get('prods_in_cart_ids_list')
+        prods_in_cart_ids_list.append(product_id)
+        request.session['prods_in_cart_ids_list'] = prods_in_cart_ids_list
+        # group_prods_in_cart(request, prods_in_cart_ids)
     else:
-        prods_in_cart = list()
-        prods_in_cart.append(product_id)
-        request.session['prods_in_cart'] = prods_in_cart
-        group_prods_in_cart(request, prods_in_cart)
+        prods_in_cart_ids_list = list()
+        prods_in_cart_ids_list.append(product_id)
+        request.session['prods_in_cart_ids_list'] = prods_in_cart_ids_list
+        # group_prods_in_cart(request, prods_in_cart_ids)
 
-    request.session['cart_qwt_of_prods'] = len(prods_in_cart)
+    request.session['cart_qwt_of_prods'] = len(prods_in_cart_ids_list)
 
     if request.session.get('cart_cost'):
         add_cart_cost = request.session['cart_cost']
@@ -42,75 +45,74 @@ def add_to_cart_main(request, product_id=1):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
-def group_prods_in_cart(request, prods_in_cart):
-    # группировка товаров... товаров с таким-то id  - 2,
-    # с таким-то - 4...  для выписывания счета (создания заказа для сохренения в Б/д)
-
-    prods_in_cart = prods_in_cart
-    # создаем словарь для группировки id
-    grouped_prods_in_cart = {}
-    # для каждого элемента (назовем его prod) в списке prods_in_cart....
-    for prod in prods_in_cart:  # http://samag.ru/archive/article/1581
-        # если запись с ключем равным такому id(преобразованному в int) уже есть в списке prod_cart_checkout....
-        if prod in grouped_prods_in_cart:
-            # то увеличиваем ее (записи с ключем равным id товара из списка cart) значение на 1
-            grouped_prods_in_cart[prod] += 1
-        else:
-            # если записи с таким ключем нет то создаем ее...
-            grouped_prods_in_cart[prod] = 1
-
-    # и сохраняем отсортированный словарь prod_cart_checkout в session в запись с ключем cart_checkout_items
-    request.session['grouped_prods_in_cart'] = grouped_prods_in_cart
-
-
-def add_to_cart(request, product_id):
-    prods_in_cart = request.session.get('prods_in_cart')
-    prods_in_cart.append(product_id)
-    request.session['prods_in_cart'] = prods_in_cart
-    group_prods_in_cart(request, prods_in_cart)
-
-    request.session['cart_qwt_of_prods'] = len(prods_in_cart)
-
-    add_cart_cost = request.session['cart_cost']
+def increase_product_quantity_in_cart(request, product_id):
+    """
+    :param request:
+    :param str product_id:
+    Увеличивает количество товаров выбранных в корзине
+    """
+    prods_in_cart_ids_list = request.session.get('prods_in_cart_ids_list')
+    prods_in_cart_ids_list.append(product_id)
+    request.session['prods_in_cart_ids_list'] = prods_in_cart_ids_list
+    request.session['cart_qwt_of_prods'] = len(prods_in_cart_ids_list)
+    cart_cost = request.session['cart_cost']
     prod_to_add = Product.objects.get(id=product_id)
-    add_cart_cost += prod_to_add.productCurrentPrice
-    request.session['cart_cost'] = add_cart_cost
-
-    # http://stackoverflow.com/a/12758859/3177550
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    cart_cost += prod_to_add.productCurrentPrice
+    request.session['cart_cost'] = cart_cost
+    return redirect('my_cart')
 
 
-def rem_from_cart(request, product_id):
-    if product_id in request.session.get('prods_in_cart'):
-        rem_usercart = request.session.get('prods_in_cart')
-        rem_usercart.remove(product_id)
-        request.session['prods_in_cart'] = rem_usercart
-        group_prods_in_cart(request, rem_usercart)
-
-        request.session['cart_qwt_of_prods'] = len(rem_usercart)
-
-        rem_cart_cost = request.session.get('cart_cost')
+def decrease_product_quantity_in_cart(request, product_id):
+    """
+    :param request:
+    :param str product_id:
+    Уменьшает количество товаров выбранных в корзине
+    """
+    prods_in_cart_ids_list = request.session.get('prods_in_cart_ids_list')
+    if product_id in prods_in_cart_ids_list:
+        prods_in_cart_ids_list.remove(product_id)
+        request.session['prods_in_cart_ids_list'] = prods_in_cart_ids_list
+        request.session['cart_qwt_of_prods'] = len(prods_in_cart_ids_list)
+        cart_cost = request.session.get('cart_cost')
         prod_to_rem = Product.objects.get(id=product_id)
-        rem_cart_cost -= prod_to_rem.productCurrentPrice
-        request.session['cart_cost'] = rem_cart_cost
+        cart_cost -= prod_to_rem.productCurrentPrice
+        request.session['cart_cost'] = cart_cost
+    return redirect('my_cart')
 
-    # http://stackoverflow.com/a/12758859/3177550
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+def group_prods_in_cart(request, prods_in_cart_ids_list):
+    """
+    :param request:
+    :param list prods_in_cart_ids_list:
+    Группирует товары в корзине для выписывания счета(создания заказа для сохренения в Б/д)...
+    Например товаров с таким-то id  - 2, с таким-то - 4...
+    """
+    grouped_prods_in_cart_dict = {}
+    for prod_id in prods_in_cart_ids_list:
+        product = Product.objects.get(id=prod_id)
+        if product in grouped_prods_in_cart_dict:
+            grouped_prods_in_cart_dict[product] += 1
+        else:
+            grouped_prods_in_cart_dict[product] = 1
+    return grouped_prods_in_cart_dict
 
 
 def cart(request):
-
+    """
+    :param request:
+    Отображает страницу корзины
+    """
     args = dict()
-
-    args['products'] = Product.objects.all()
     args['form'] = OrderForm
+    prods_in_cart_ids_list = request.session.get('prods_in_cart_ids_list')
+    args['grouped_prods_in_cart_dict'] = group_prods_in_cart(request, prods_in_cart_ids_list)
 
     # Пример заполнения полей формы из контекста при создании формы
     # cart_cost = request.session.get('cart_cost')
     # form = OrderForm(initial={'order_sum': cart_cost})
     # args['form'] = form
 
-    return render_to_response('cart.html', args, context_instance=RequestContext(request))
+    return render(request, 'cart.html', args)
 
 
 def make_order(request):
@@ -160,7 +162,7 @@ def make_order(request):
             del request.session['grouped_prods_in_cart']
             del request.session['prods_in_cart']
 
-            return render_to_response('order_created.html', {'email': add.order_person_email})
+            return render(request, 'order_created.html', {'email': add.order_person_email})
 
         else:
             messages.error(request, 'Ваш заказ НЕ ОФОРМЛЕН!!! Проверьте правильность введения '
@@ -208,7 +210,7 @@ def ordered_products_titles(grouped_prods_in_cart):
         product = Product.objects.get(id=int(key))
         title_and_size = ""
         if product.productSize:
-            title_and_size = product.productTitle + '(резмер %s)' % product.productSize
+            title_and_size = product.productTitle + '(размер %s)' % product.productSize
         else:
             title_and_size = product.productTitle
 
