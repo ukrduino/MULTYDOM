@@ -33,12 +33,12 @@ def add_to_cart_main(request, product_id=1):
     if request.session.get('cart_cost'):
         add_cart_cost = request.session['cart_cost']
         prod_to_add = Product.objects.get(id=product_id)
-        add_cart_cost += prod_to_add.productCurrentPrice
+        add_cart_cost += prod_to_add.product_current_price
         request.session['cart_cost'] = add_cart_cost
     else:
         add_cart_cost = 0
         prod_to_add = Product.objects.get(id=product_id)
-        add_cart_cost += prod_to_add.productCurrentPrice
+        add_cart_cost += prod_to_add.product_current_price
         request.session['cart_cost'] = add_cart_cost
 
     # http://stackoverflow.com/a/12758859/3177550
@@ -57,7 +57,7 @@ def increase_product_quantity_in_cart(request, product_id):
     request.session['cart_qwt_of_prods'] = len(prods_in_cart_ids_list)
     cart_cost = request.session['cart_cost']
     prod_to_add = Product.objects.get(id=product_id)
-    cart_cost += prod_to_add.productCurrentPrice
+    cart_cost += prod_to_add.product_current_price
     request.session['cart_cost'] = cart_cost
     return redirect('my_cart')
 
@@ -75,7 +75,7 @@ def decrease_product_quantity_in_cart(request, product_id):
         request.session['cart_qwt_of_prods'] = len(prods_in_cart_ids_list)
         cart_cost = request.session.get('cart_cost')
         prod_to_rem = Product.objects.get(id=product_id)
-        cart_cost -= prod_to_rem.productCurrentPrice
+        cart_cost -= prod_to_rem.product_current_price
         request.session['cart_cost'] = cart_cost
     return redirect('my_cart')
 
@@ -88,12 +88,13 @@ def group_prods_in_cart(request, prods_in_cart_ids_list):
     Например товаров с таким-то id  - 2, с таким-то - 4...
     """
     grouped_prods_in_cart_dict = {}
-    for prod_id in prods_in_cart_ids_list:
-        product = Product.objects.get(id=prod_id)
-        if product in grouped_prods_in_cart_dict:
-            grouped_prods_in_cart_dict[product] += 1
-        else:
-            grouped_prods_in_cart_dict[product] = 1
+    if prods_in_cart_ids_list:
+        for prod_id in prods_in_cart_ids_list:
+            product = Product.objects.get(id=prod_id)
+            if product in grouped_prods_in_cart_dict:
+                grouped_prods_in_cart_dict[product] += 1
+            else:
+                grouped_prods_in_cart_dict[product] = 1
     return grouped_prods_in_cart_dict
 
 

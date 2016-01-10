@@ -29,17 +29,19 @@
               {% for prod in products %}
                 <div class="col-lg-12" id="productsListItem">
                     <div class="col-lg-4">
-                        <img src="{{ prod.get_medium }}" alt="{{ prod.productTitle }}">
+                        {% for image in prod.images.all %}
+                        <img src="{{ image.image.url }}">
+                        {% endfor %}
                     </div>
                     <div class="col-lg-8">
-                        <h4>{{ prod.productTitle|truncatechars:37 }} {% if prod.productSize %}(размер: {{ prod.productSize }}){% endif %}</h4>
+                        <h4>{{ prod.product_title|truncatechars:37 }} {% if prod.product_size%}(размер: {{ prod.product_size }}){% endif %}</h4>
                         <div class="caption">
-                        <p>{{ prod.productText|truncatechars:230|safe }}</p>
+                        <p>{{ prod.product_text|truncatechars:230|safe }}</p>
                         <p class="price">
-                            {% if prod.productPresence %}
-                                <span style="color: green"> В наличии, </span>   цена: {{ prod.productCurrentPrice }} грн <a href="{% url 'product' prod.id %}" class="btn btn-primary" role="button">Подробнее</a> <a href="{% url 'add_main' prod.id %}" class="btn btn-success" role="button">Купить</a></p>
-                            {% elif prod.productForOrder%}
-                                <span style="color: blue"> Под заказ,  </span> цена: {{ prod.productCurrentPrice }} грн <a href="{% url 'product' prod.id %}" class="btn btn-primary" role="button">Подробнее</a> <a href="{% url 'add_main' prod.id %}" class="btn btn-success" role="button">Купить</a></p>
+                            {% if prod.product_present %}
+                                <span style="color: green"> В наличии, </span>   цена: {{ prod.product_current_price }} грн <a href="{% url 'product' prod.id %}" class="btn btn-primary" role="button">Подробнее</a> <a href="{% url 'add_main' prod.id %}" class="btn btn-success" role="button">Купить</a></p>
+                            {% elif prod.product_available_for_order %}
+                                <span style="color: blue"> Под заказ,  </span> цена: {{ prod.product_current_price }} грн <a href="{% url 'product' prod.id %}" class="btn btn-primary" role="button">Подробнее</a> <a href="{% url 'add_main' prod.id %}" class="btn btn-success" role="button">Купить</a></p>
                             {% else %}
                                 <span style="color: #000000"> Недоступно </span>
                             {% endif %}

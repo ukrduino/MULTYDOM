@@ -1,294 +1,280 @@
+from django.core.exceptions import ValidationError
 from django.db import models
-#TODO - избавиться от TRIM_PATH переделав алгоритм загрузки фото
-from MULTYDOM.settings import SITE_ADDR, TRIM_PATH, TRIM_PATH_PROD, MEDIA_ROOT
-from PIL import Image
-import os
-import sys
-# for image resizing
+from django.utils.safestring import mark_safe
+from mptt.models import MPTTModel, TreeForeignKey
+from MULTYDOM.local_settings_multydom import SITE_ADDR
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
-# for validation
-from django.utils.translation import ugettext as _
-from django.core.exceptions import ValidationError
-from mptt.models import MPTTModel, TreeForeignKey
-# from ckeditor.fields import RichTextField
+from PIL import Image
 
 
-validation_message1 = 'Используйте квадратное изображение размером не менее 160 x 160 pixels'
-validation_message2 = 'Используйте изображение формата  JPEG или PNG.'
-validation_message3 = 'Загруженный файл не читается'
-validation_message4 = 'Используйте изображение с соотношением сторон Ширина/Высота = 1.33 и размером не менее 400 x 300,' \
-                      ' оно будет автоматически уменьшено'
+size_validation_message_160_160 = 'Используйте квадратное изображение размером не менее 160 x 160 pixels'
+format_validation_message_jpg_png = 'Используйте изображение формата  JPEG или PNG.'
+invalid_image_file_validation_message = 'Загруженный файл не читается'
+size_validation_message_w400_h300 = 'Используйте изображение с соотношением сторон Ширина/Высота = 1.33 и размером ' \
+                                    'не менее 400 x 300, оно будет автоматически уменьшено'
+size_validation_message_w130_h100 = 'Используйте изображение с соотношением сторон Ширина/Высота = 1.33 и размером ' \
+                                    'не менее 130 x 100, оно будет автоматически уменьшено'
 
 
-# абстрактный класс имеет имя и картинку 160*160
-class MainClass(models.Model):
+class CategoryManufacturerImage(models.Model):
+    """
+    Абстрактный класс изображения для категории и производителя
+    """
     class Meta:
         abstract = True
-        app_label = 'Магазин'
 
-    title = models.CharField(max_length=100, verbose_name='Название', blank=False, unique=True)
-    slug = models.CharField(max_length=100, verbose_name='URL')
-    #TODO - сделать переименование файлов при загрузке с использованием slug
-    upload_path = os.path.join(MEDIA_ROOT, 'other')
-    image = ProcessedImageField(upload_to=upload_path,
+    image = ProcessedImageField(upload_to='other/%Y/%m/%d',
                                 processors=[ResizeToFill(160, 160)],
                                 format='JPEG')
 
-# при обращении к экземпляру класса возвращает его имя - title ( в админке использует __str__, в др местах __unicode__)
-    def __str__(self):
-        return self.title
-
-    def __unicode__(self):
-        return self.title
-
-    def pic(self):
-        if self.image:
-            return '<img src="%s/%s"/>' % (SITE_ADDR, self.image.url)
-        else:
-            return '(none)'
-    pic.short_description = 'Изображение'
-    pic.allow_tags = True
-
-# функция формирования пути к картинке объекта для отображения в админке
-
-    def admin_pic(self):
-        if self.image:
-            return '<img src="%s%s">' % (SITE_ADDR, self.image.url)
-        else:
-            return '(none)'
-    admin_pic.short_description = 'Изображение'
-    admin_pic.allow_tags = True
+    # TODO Проверить валидацию файла при загрузке
 
     def delete(self, *args, **kwargs):
+        """
+        Метод для удаления файла с диска при удалении экземпляра класса рисунка из БД,
+        работает если производить удаление именно объекта рисунка из админки,
+        а не объекта производителя или категории и как следствие -> каскадно
+        объекта рисунка связанного с ним.
+        """
         self.image.delete(save=False)
         super().delete(*args, **kwargs)
 
+    def clean(self):
+        """
+        Метод для валидации изображения перед сохранением (Используется Pillow).
+        """
+        image = self.image
+
+        if image:
+            # валидация размеров
+            img = Image.open(image)
+            w, h = img.size
+            if w != h:
+                raise ValidationError(size_validation_message_160_160)
+
+        else:
+            raise ValidationError(invalid_image_file_validation_message)
+
+        return image
+
     def save(self, *args, **kwargs):
+        """
+        Метод для удаления файла с диска при замене старого изображения(файла)
+        новым в объекте рисунка без создания нового объекта рисунка.
+        Пустые папки при этом не удаляются.
+        """
+
         if self.pk:
             old = self.__class__._default_manager.get(pk=self.pk)
             if old.image.name and (not self.image._committed or not self.image.name):
                 old.image.delete(save=False)
         super().save(*args, **kwargs)
 
-    def clean(self):
-        image = self.image
-
-        if image:
-            #validate dimensions
-            img = Image.open(image)
-            w, h = img.size
-            if w != h:
-                raise ValidationError(_(validation_message1))
-
-            #validate content type
-            im_format = img.format
-            if not im_format.lower() in ['jpeg', 'png', 'jpg']:
-                raise ValidationError(_(validation_message2))
-
-        else:
-            raise ValidationError(_(validation_message3))
-
-        return image
+    def __str__(self):
+        """
+        Формирует тэг для отображения файла в админке
+        """
+        if self.image:
+            return mark_safe('<img src="%s%s"/>' % (SITE_ADDR, self.image.url))
+        return 'no file'
+    __str__.allow_tags = True
 
 
-class Manufacturer(MainClass):
+class CategoryImage(CategoryManufacturerImage):
+    """
+    Класс изображения для категории товара
+    """
+    class Meta:
+        db_table = 'category_image'
+        verbose_name = 'Изображение категории'
+        verbose_name_plural = 'Изображения категорий'
+
+    category = models.OneToOneField('Category')
+
+
+class ManufacturerLogo(CategoryManufacturerImage):
+    """
+    Класс изображения (логотип) для производителя
+    """
+    class Meta:
+        db_table = 'manufacturer_logo'
+        verbose_name = 'Логотип производителя'
+        verbose_name_plural = 'Логотипы производителя'
+
+    manufacturer = models.OneToOneField('Manufacturer')
+
+
+class Manufacturer(models.Model):
+    """
+    Класс производителя товара
+    """
     class Meta:
         db_table = 'manufacturer'
         verbose_name = 'Производитель'
         verbose_name_plural = 'Производители'
 
-    manufacturerText = models.TextField(max_length=1000, verbose_name='Описание производителя', blank=True)
-    manufacturerCountry = models.CharField(max_length=50, verbose_name='Страна производства', blank=True)
+    manufacturer_title = models.CharField(max_length=100, verbose_name='Название', blank=False, unique=True)
+    manufacturer_slug = models.CharField(max_length=100, verbose_name='URL')
+    manufacturer_text = models.TextField(max_length=1000, verbose_name='Описание производителя', blank=True)
+    manufacturer_country = models.CharField(max_length=50, verbose_name='Страна производства')
+
+    def __str__(self):
+        return self.manufacturer_title
+
+    def __unicode__(self):
+        return self.manufacturer_title
 
 
-class Category(MainClass, MPTTModel):
+class Category(MPTTModel):
+    """
+    Класс категории товара.
+    Категории могут иметь подкатегории и так далее
+    """
     class Meta:
         db_table = 'category'
         verbose_name = 'Товарная группа'
         verbose_name_plural = 'Товарные группы'
 
     class MPTTMeta:
-        order_insertion_by = ['title']
+        order_insertion_by = ['category_title']
 
+    category_title = models.CharField(max_length=100, verbose_name='Название', blank=False, unique=True)
+    category_slug = models.CharField(max_length=100, verbose_name='URL')
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children',
                             verbose_name='Входит в группу')
 
+    def __str__(self):
+        return self.category_title
 
-#TODO - а как начет нескольких картинок товара???
+    def __unicode__(self):
+        return self.category_title
+
+
 class Product(models.Model):
     class Meta:
         db_table = 'product'
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
 
-    productTitle = models.CharField(max_length=100, verbose_name='Название товара', blank=False, unique=True)
-    productSlug = models.CharField(max_length=100, verbose_name='URL')
+    product_title = models.CharField(max_length=255, verbose_name='Название товара', blank=False, unique=True)
+    product_slug = models.CharField(max_length=255, verbose_name='URL')
     # productText = RichTextField(verbose_name='Описание товара', blank=False)
-    productDate = models.DateTimeField(auto_now_add=True, verbose_name='Дата размещения', blank=False)
-    productDateChange = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
-    productStartPrice = models.IntegerField(verbose_name='Начальная цена', default=0)
-    productStartPriceInDollars = models.BooleanField(verbose_name='Цена в долларах', default=False)
-    productCurrentPrice = models.IntegerField(verbose_name='Текущая цена', default=0)
-    productPresence = models.BooleanField(verbose_name='В наличии', default=True)
-    productForOrder = models.BooleanField(verbose_name='Под заказ', default=False)
-    productSize = models.CharField(verbose_name='Размер(без слова "размер")', blank=True, max_length=100)
-    productManufacturer = models.ForeignKey(Manufacturer, verbose_name='Производитель')
-    productCategory = models.ForeignKey(Category, verbose_name='Категория товара')
+    product_add_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата размещения', blank=False)
+    product_change_date = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
+    product_start_price = models.IntegerField(verbose_name='Начальная цена', default=0)
+    product_start_price_in_dollars = models.BooleanField(verbose_name='Цена в долларах', default=False)
+    product_current_price = models.IntegerField(verbose_name='Текущая цена', default=0)
+    product_present = models.BooleanField(verbose_name='В наличии', default=True)
+    product_available_for_order = models.BooleanField(verbose_name='Под заказ', default=False)
+    product_size = models.CharField(verbose_name='Размер(без слова "размер")', blank=True, max_length=100)
+    manufacturer = models.ForeignKey(Manufacturer, verbose_name='Производитель')
+    category = models.ForeignKey(Category, verbose_name='Категория товара')
 
-# http://www.mechanicalgirl.com/view/image-resizing-file-uploads-doing-it-easy-way/
-    upload_path = os.path.join(MEDIA_ROOT, 'products')
-    productPhoto_original = ProcessedImageField(upload_to=upload_path,
-                                                processors=[ResizeToFill(400, 300)],
-                                                verbose_name='Фото товара формат (выс4*шир3)')
-    productPhoto_medium = models.CharField(max_length=255, blank=True, editable=False)
-    productPhoto_thumb = models.CharField(max_length=255, blank=True, editable=False)
 
-    # methods to return paths to the thumbnail, medium, and original images
-    if sys.platform.startswith('win32'):
-        def get_thumb(self):
-            return '<img src="%s/%s"/>' % (SITE_ADDR, self.productPhoto_thumb[TRIM_PATH_PROD:])
-        get_thumb.allow_tags = True
-
-        def get_thumb_cart(self):
-            return '%s/%s' % (SITE_ADDR, self.productPhoto_thumb[TRIM_PATH_PROD:])
-        get_thumb.allow_tags = True
-
-        def get_medium(self):
-            return '%s/%s' % (SITE_ADDR, self.productPhoto_medium[TRIM_PATH_PROD:])
-        get_medium.allow_tags = True
-
-        def get_original(self):
-
-            return '%s/%s' % (SITE_ADDR, self.productPhoto_original.path[TRIM_PATH_PROD:])
-        get_original.allow_tags = True
-
-    else:
-        def get_thumb(self):
-            return '<img src="%s/%s"/>' % (SITE_ADDR, self.productPhoto_thumb[TRIM_PATH:])
-        get_thumb.allow_tags = True
-
-        def get_thumb_cart(self):
-            return '%s/%s' % (SITE_ADDR, self.productPhoto_thumb[TRIM_PATH:])
-        get_thumb.allow_tags = True
-
-        def get_medium(self):
-            return '%s/%s' % (SITE_ADDR, self.productPhoto_medium[TRIM_PATH:])
-        get_medium.allow_tags = True
-
-        def get_original(self):
-
-            return '%s/%s' % (SITE_ADDR, self.productPhoto_original.path[TRIM_PATH:])
-        get_original.allow_tags = True
+class ProductImageBase(models.Model):
+    """
+    Абстрактный класс изображения для товара
+    """
+    class Meta:
+        abstract = True
 
     def delete(self, *args, **kwargs):
-        self.productPhoto_original.delete(save=False)
-        os.remove(self.productPhoto_medium)
-        os.remove(self.productPhoto_thumb)
-
+        """
+        Метод для удаления файла с диска при удалении экземпляра класса рисунка из БД,
+        работает если производить удаление именно объекта рисунка из админки,
+        а не объекта производителя, категории или товара и как следствие -> каскадно
+        объекта рисунка связанного с ним.
+        """
+        self.image.delete(save=False)
         super().delete(*args, **kwargs)
 
-    # And all the image resizing magic happens here, where I'm overriding the model's save() method.
     def save(self, *args, **kwargs):
+        """
+        Метод для удаления файла с диска при замене старого изображения(файла)
+        новым в объекте рисунка без создания нового объекта рисунка.
+        Пустые папки при этом не удаляются.
+        """
 
-# http://tiku.io/questions/133317/replacing-a-django-image-doesnt-delete-original
-# В случае замены картинки удаляет старые файлы картинок привязанные к товару.
         if self.pk:
-            # товар до сохранения
             old = self.__class__._default_manager.get(pk=self.pk)
-
-            if old.productPhoto_original.name and (not self.productPhoto_original._committed
-                                                   or not self.productPhoto_original.name):
-                # удаляем основное фото
-                old.productPhoto_original.delete(save=False)
-                # Удаляем medium
-                try:
-                    os.remove(old.productPhoto_medium)
-                except:
-                    pass
-                # Удаляем thumb
-                try:
-                    os.remove(old.productPhoto_thumb)
-                except:
-                    pass
-        # clean_productPhoto_original(self)
-        super(Product, self).save()
-
-        # размеры будущих картинок
-        sizes = {'thumbnail': {'height': 100, 'width': 130}, 'medium': {'height': 162, 'width': 216},}
-        photo_path = str(self.productPhoto_original.path)  # this returns the full system path to the original file
-        im = Image.open(photo_path)  # open the image using PIL
-
-        print(sys.platform)
-        slash_symb = "/"
-        if sys.platform.startswith('win32'):
-            # win32-specific code here...
-            slash_symb = "\\"
-        # pull a few variables out of that full path
-        # extension = photo_path.rsplit('.', 1)[1]  # the file extension
-        filename = photo_path.rsplit(slash_symb, 1)[1].rsplit('.', 1)[0]  # the file name only (minus path or extension)
-        full_path = photo_path.rsplit(slash_symb, 1)[0]  # the path only (minus the filename.extension)
-
-        # create medium image
-        im.thumbnail((sizes['medium']['width'], sizes['medium']['height']), Image.ANTIALIAS)
-        med_name = filename + "_" + str(sizes['medium']['width']) + "x" + str(sizes['medium']['height']) + ".jpg"
-        im.save(full_path + slash_symb + med_name)
-        self.productPhoto_medium = self.upload_path + med_name
-
-        # create thumbnail
-        im.thumbnail((sizes['thumbnail']['width'], sizes['thumbnail']['height']), Image.ANTIALIAS)
-        thumb_name = filename + "_" + str(sizes['thumbnail']['width']) \
-                              + "x" + str(sizes['thumbnail']['height']) + ".jpg"
-        im.save(full_path + slash_symb + thumb_name)
-        self.productPhoto_thumb = self.upload_path + thumb_name
-
-        super(Product, self).save(*args, **kwargs)
+            if old.image.name and (not self.image._committed or not self.image.name):
+                old.image.delete(save=False)
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.productTitle
+        """
+        Формирует тэг для отображения файла в админке
+        """
+        if self.image:
+            return mark_safe('<img src="%s%s"/>' % (SITE_ADDR, self.image.url))
+        return 'no file'
+    __str__.allow_tags = True
 
-    def __unicode__(self):
-        return self.productTitle
+
+class ProductImage1(ProductImageBase):
+    class Meta:
+        db_table = 'product_image_1'
+        verbose_name = 'Изображение товара'
+        verbose_name_plural = 'Изображения товара'
+    """
+    Изображение товара размером ширина 400 высота 300 для страницы товара
+    """
+    image = ProcessedImageField(upload_to='products/%Y/%m/%d',
+                                processors=[ResizeToFill(400, 300)],
+                                format='JPEG')
+
+    product = models.ForeignKey(Product, related_name='images')
 
     def clean(self):
-        image = self.productPhoto_original
-        print(image)
+        """
+        Метод для валидации изображения перед сохранением (Используется Pillow).
+        """
+        image = self.image
 
         if image:
-            #validate dimensions
+            # валидация размеров
             img = Image.open(image)
             w, h = img.size
             img_asp_ratio = float(format(w/h, '.2f'))
             my_asp_ratio = float(format(400/300, '.2f'))
             if img_asp_ratio != my_asp_ratio and (w < 400 or h < 300):
-                raise ValidationError(_(validation_message4))
-
-            #validate content type
-            im_format = img.format
-            if not im_format.lower() in ['jpeg', 'png', 'jpg']:
-                raise ValidationError(_(validation_message2))
-
-            # #validate file size
-            # if len(image) > (1 * 1024 * 1024):
-            #     raise ValidationError(_('Image file too large ( maximum 1mb )'))
+                raise ValidationError(size_validation_message_w400_h300)
         else:
-            raise ValidationError(_(validation_message3))
+            raise ValidationError(invalid_image_file_validation_message)
 
         return image
 
-# Programmatically saving image to Django ImageField
-# http://stackoverflow.com/questions/1308386/programmatically-saving-image-to-django-imagefield
 
-# Django: add image in an ImageField from image url
-# http://stackoverflow.com/questions/1393202/django-add-image-in-an-imagefield-from-image-url
+class ProductImage2(ProductImageBase):
+    class Meta:
+        db_table = 'product_image_2'
+        verbose_name = 'Изображение товара'
+        verbose_name_plural = 'Изображения товара'
+    """
+    Изображение товара размером ширина 130 высота 100 для корзины
+    """
+    image = ProcessedImageField(upload_to='products/%Y/%m/%d',
+                                processors=[ResizeToFill(400, 300)],
+                                format='JPEG')
 
-# django imagekit: set ProcessedImageField from image url
-# http://stackoverflow.com/questions/19386866/django-imagekit-set-processedimagefield-from-image-url
-# http://www.wenda.io/questions/5011020/django-imagekit-set-processedimagefield-from-image-url.html
+    product = models.OneToOneField(Product)
 
-# Generates thumbnails after image is uploaded into memory
-# http://djangothumbnails.com/
+    def clean(self):
+        """
+        Метод для валидации изображения перед сохранением (Используется Pillow).
+        """
+        image = self.image
 
-# How to resize the new uploaded images using PIL before saving?
-# http://stackoverflow.com/questions/7970637/how-to-resize-the-new-uploaded-images-using-pil-before-saving
-# https://github.com/un1t/django-resized
+        if image:
+            # валидация размеров
+            img = Image.open(image)
+            w, h = img.size
+            img_asp_ratio = float(format(w/h, '.2f'))
+            my_asp_ratio = float(format(130/100, '.2f'))
+            if img_asp_ratio != my_asp_ratio and (w < 130 or h < 100):
+                raise ValidationError(size_validation_message_w130_h100)
+        else:
+            raise ValidationError(invalid_image_file_validation_message)
+
+        return image

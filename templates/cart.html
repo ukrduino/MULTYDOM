@@ -4,7 +4,7 @@
 
 {% block cart %}
     <div class="row">
-        {% if not request.session.cart_qwt_of_prods %}
+        {% if not grouped_prods_in_cart_dict %}
             <div class="col-lg-12" id="emptyCart">
                 <div class="well">В вашей корзине пока ничего нет :(</div>
             </div>
@@ -15,12 +15,12 @@
                         <li class="list-group-item">
                             <div class="row" id="cartProdRow">
                                 <div class="col-lg-4">
-                                    <img src="{{ product.get_thumb_cart }}" alt="{{ product.productTitle }}">
+                                    <img src="{{ product.images.first.image.url }}"/>
                                 </div>
                                 <div class="col-lg-5">
-                                    <a href="{% url 'product' product.id %}">{{ product.productTitle|truncatechars:55 }}
-                                        {% if product.productSize %}(размер: {{ product.productSize }}){% endif %}</a>
-                                    <p id="cartPrice">Цена за ед.: {{ product.productCurrentPrice }} грн</p>
+                                    <a href="{% url 'product' product.id %}">{{ product.product_title|truncatechars:55 }}
+                                        {% if product.product_size %}(размер: {{ product.product_size }}){% endif %}</a>
+                                    <p id="cartPrice">Цена за ед.: {{ product.product_current_price }} грн</p>
                                 </div>
                                 <div class="col-lg-1">
                                     {{ quantity }}

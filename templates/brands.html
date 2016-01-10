@@ -3,7 +3,6 @@
 {% load mptt_tags %}
 
 
-
 {% block brands %}
         <div class="col-lg-3" id="groupPanel">
             <ul class="nav nav-pills nav-stacked" id="sideMenu">
@@ -25,7 +24,7 @@
             {% for brand in brands %}
                 <div class="col-lg-3" id="thumbnailCol">
                     <a href="{% url 'brand_filter' brand.id %}" id="thumbnail">
-                        <img src="{{ brand.pic }}" alt="{{ brand.title }}" data-toggle="tooltip" data-placement="top" title="{{ brand.title }}">
+                        <img src="{{ brand.manufacturerlogo.image.url }}" alt="{{ brand.manufacturer_title }}" data-toggle="tooltip" data-placement="top" title="{{ brand.manufacturer_title }}">
                     </a>
                 </div>
             {% endfor %}

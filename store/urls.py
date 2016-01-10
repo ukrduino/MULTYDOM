@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from store.views import *
 
 urlpatterns = [
@@ -12,4 +12,4 @@ urlpatterns = [
                url(r'^product/(?P<product_id>\d+)$', product,  name="product"),
                url(r'^docs/$', docs,  name="docs"),
                url(r'^about/$', about,  name="about"),
-               ]
+            ]
