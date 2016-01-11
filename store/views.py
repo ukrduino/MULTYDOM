@@ -33,7 +33,7 @@ def category_filter(request, category_id):
         args['categories'] = cats
 
     else:
-        args['products'] = Product.objects.filter(productCategory_id=category_id)
+        args['products'] = Product.objects.filter(category_id=category_id)
 
         return render(request, 'products.html', args)
 

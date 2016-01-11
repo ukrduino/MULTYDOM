@@ -8,7 +8,7 @@
             <ul class="nav nav-pills nav-stacked" id="sideMenu">
                 {% recursetree nodes %}
                     <li>
-                        <a href="{% url 'category_filter' node.id %}">{{ node.title }}</a>
+                        <a href="{% url 'category_filter' node.id %}">{{ node.category_title }}</a>
                             {% if not node.is_leaf_node %}
                                 <ul class="children">
                                     <li>

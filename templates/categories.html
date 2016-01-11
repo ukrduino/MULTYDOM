@@ -2,16 +2,12 @@
 {% load staticfiles %}
 {% load mptt_tags %}
 
-{#TODO - придумать какую нибудь вменяемую систему навигации по категориям, товарам, брендам #}
-{#TODO - придумать фильтр по категориям товарам брендам #}
-{#TODO - все на AJAX#}
-
 {% block categories %}
         <div class="col-lg-3" id="groupPanel">
             <ul class="nav nav-pills nav-stacked" id="sideMenu">
                 {% recursetree nodes %}
                     <li>
-                        <a href="{% url 'category_filter' node.id %}">{{ node.title }}</a>
+                        <a href="{% url 'category_filter' node.id %}">{{ node.category_title }}</a>
                             {% if not node.is_leaf_node %}
                                 <ul class="children">
                                     <li>
@@ -27,7 +23,7 @@
             {% for category in categories %}
                 <div class="col-lg-3" id="thumbnailCol">
                     <a href="{% url 'category_filter' category.id %}" id="thumbnail">
-                        <img src="{{ category.pic }}" alt="{{ category.title }}" data-toggle="tooltip" data-placement="top" title="{{ category.title }}">
+                        <img src="{{ category.categoryimage.image.url }}" alt="{{ category.category_title }}" data-toggle="tooltip" data-placement="top" title="{{ category.category_title }}"/>
                     </a>
                 </div>
 
