@@ -1,36 +1,16 @@
-{% extends 'base.html' %}
+{% extends 'page_with_left_panel.html' %}
 {% load staticfiles %}
-{#{% load bootstrap3 %}#}
-{% load mptt_tags %}
 
 {% block product %}
-        <div class="col-lg-3" id="groupPanel">
-            <ul class="nav nav-pills nav-stacked" id="sideMenu">
-                {% recursetree nodes %}
-                    <li>
-                        <a href="{% url 'category_filter' node.id %}">{{ node.category_title }}</a>
-                            {% if not node.is_leaf_node %}
-                                <ul class="children">
-                                    <li>
-                                        {{ children }}
-                                    </li>
-                                </ul>
-                            {% endif %}
-                    </li>
-                {% endrecursetree %}
-            </ul>
+        <div class="col-lg-8">
+            <img class="round_corners product_image_on_product_page" src="{{ product.get_original }}" alt="{{ product.productTitle }}">
+            <p class="price">
+                Цена: {{ product.productCurrentPrice }} грн
+                <a href="{% url 'add_main' product.id %}" class="btn btn-success" role="button">Купить</a>
+            </p>
         </div>
-        <div class="col-lg-9" id="oneProdPanel">
-          <div class="col-lg-8">
-              <img src="{{ product.get_original }}" alt="{{ product.productTitle }}">
-              <p class="price">Цена: {{ product.productCurrentPrice }} грн <a href="{% url 'add_main' product.id %}" class="btn btn-success" role="button">Купить</a></p>
-          </div>
-            <div class="col-lg-4">
-              <h3>{{ product.productTitle }}</h3>
-              <p>{{ product.productText|safe }}</p>
-          </div>
+        <div class="col-lg-4">
+            <h3>{{ product.productTitle }}</h3>
+            <p>{{ product.productText|safe }}</p>
         </div>
-
-
-
 {% endblock %}

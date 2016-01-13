@@ -1,35 +1,13 @@
-{% extends 'base.html' %}
+{% extends 'page_with_left_panel.html' %}
 {% load staticfiles %}
-{% load mptt_tags %}
 
 {% block categories %}
-        <div class="col-lg-3" id="groupPanel">
-            <ul class="nav nav-pills nav-stacked" id="sideMenu">
-                {% recursetree nodes %}
-                    <li>
-                        <a href="{% url 'category_filter' node.id %}">{{ node.category_title }}</a>
-                            {% if not node.is_leaf_node %}
-                                <ul class="children">
-                                    <li>
-                                        {{ children }}
-                                    </li>
-                                </ul>
-                            {% endif %}
-                    </li>
-                {% endrecursetree %}
-            </ul>
-        </div>
-        <div class="col-lg-9" id="prodPanel">
-            {% for category in categories %}
-                <div class="col-lg-3" id="thumbnailCol">
-                    <a href="{% url 'category_filter' category.id %}" id="thumbnail">
-                        <img src="{{ category.categoryimage.image.url }}" alt="{{ category.category_title }}" data-toggle="tooltip" data-placement="top" title="{{ category.category_title }}"/>
-                    </a>
-                </div>
-
-            {% endfor %}
-        </div>
-
-
-    
+        {% for category in categories %}
+            <div class="col-lg-3 brand_category_coll">
+                <a href="{% url 'category_filter' category.id %}">
+                    <img class="round_corners brand_category_image" src="{{ category.categoryimage.image.url }}" alt="{{ category.category_title }}"
+                         data-toggle="tooltip" data-placement="top" title="{{ category.category_title }}"/>
+                </a>
+            </div>
+        {% endfor %}
 {% endblock %}

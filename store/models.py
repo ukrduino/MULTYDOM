@@ -6,6 +6,7 @@ from MULTYDOM.local_settings_multydom import SITE_ADDR
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
 from PIL import Image
+from ckeditor.fields import RichTextField
 
 
 size_validation_message_160_160 = 'Используйте квадратное изображение размером не менее 160 x 160 pixels'
@@ -159,7 +160,7 @@ class Product(models.Model):
 
     product_title = models.CharField(max_length=255, verbose_name='Название товара', blank=False, unique=True)
     product_slug = models.CharField(max_length=255, verbose_name='URL')
-    # productText = RichTextField(verbose_name='Описание товара', blank=False)
+    product_text = RichTextField(verbose_name='Описание товара', blank=False)
     product_add_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата размещения', blank=False)
     product_change_date = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
     product_start_price = models.IntegerField(verbose_name='Начальная цена', default=0)
@@ -212,9 +213,9 @@ class ProductImageBase(models.Model):
     __str__.allow_tags = True
 
 
-class ProductImage1(ProductImageBase):
+class ProductImage(ProductImageBase):
     class Meta:
-        db_table = 'product_image_1'
+        db_table = 'product_image'
         verbose_name = 'Изображение товара'
         verbose_name_plural = 'Изображения товара'
     """
@@ -240,40 +241,6 @@ class ProductImage1(ProductImageBase):
             my_asp_ratio = float(format(400/300, '.2f'))
             if img_asp_ratio != my_asp_ratio and (w < 400 or h < 300):
                 raise ValidationError(size_validation_message_w400_h300)
-        else:
-            raise ValidationError(invalid_image_file_validation_message)
-
-        return image
-
-
-class ProductImage2(ProductImageBase):
-    class Meta:
-        db_table = 'product_image_2'
-        verbose_name = 'Изображение товара'
-        verbose_name_plural = 'Изображения товара'
-    """
-    Изображение товара размером ширина 130 высота 100 для корзины
-    """
-    image = ProcessedImageField(upload_to='products/%Y/%m/%d',
-                                processors=[ResizeToFill(400, 300)],
-                                format='JPEG')
-
-    product = models.OneToOneField(Product)
-
-    def clean(self):
-        """
-        Метод для валидации изображения перед сохранением (Используется Pillow).
-        """
-        image = self.image
-
-        if image:
-            # валидация размеров
-            img = Image.open(image)
-            w, h = img.size
-            img_asp_ratio = float(format(w/h, '.2f'))
-            my_asp_ratio = float(format(130/100, '.2f'))
-            if img_asp_ratio != my_asp_ratio and (w < 130 or h < 100):
-                raise ValidationError(size_validation_message_w130_h100)
         else:
             raise ValidationError(invalid_image_file_validation_message)
 

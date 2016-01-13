@@ -2,22 +2,16 @@ from django.contrib import admin
 from store.models import *
 
 
-class ProductImage1Inline(admin.TabularInline):
-    model = ProductImage1
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
     extra = 1
     verbose_name = 'Изображение'
     verbose_name_plural = 'Изображения товара для страницы товара'
 
 
-class ProductImage2Inline(admin.TabularInline):
-    model = ProductImage2
-    extra = 1
-    verbose_name_plural = 'Изображение товара для корзины'
-
-
 # класс для перенастройки отображения класса Product в админке
 class ProductAdmin(admin.ModelAdmin):
-    inlines = [ProductImage1Inline, ProductImage2Inline]
+    inlines = [ProductImageInline]
 
     # из поля product_title транслитом заполняется поле product_slug
     prepopulated_fields = {'product_slug': ('product_title',)}

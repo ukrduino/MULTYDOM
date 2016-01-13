@@ -1,58 +1,34 @@
-{% extends 'base.html' %}
+{% extends 'page_with_left_panel.html' %}
 {% load staticfiles %}
-{#{% load bootstrap3 %}#}
-{% load mptt_tags %}
 
 {% block products %}
-        <div class="col-lg-3" id="groupPanel">
-            <ul class="nav nav-pills nav-stacked" id="sideMenu">
-                {% recursetree nodes %}
-                    <li>
-                        <a href="{% url 'category_filter' node.id %}">{{ node.category_title }}</a>
-                            {% if not node.is_leaf_node %}
-                                <ul class="children">
-                                    <li>
-                                        {{ children }}
-                                    </li>
-                                </ul>
-                            {% endif %}
-                    </li>
-                {% endrecursetree %}
-            </ul>
-        </div>
         {% if not products%}
-            <div class="col-lg-9" id="emptyCart">
-                <div class="well">В этой категории пока ничего нет, посмотрите другие наши товары!</div>
+            <div class="col-lg-12">
+                <div class="well main_background_color empty_category">В этой категории пока ничего нет, посмотрите другие наши товары!</div>
             </div>
         {% else %}
-            <div class="col-lg-9" id="prodPanel">
               {% for prod in products %}
-                <div class="col-lg-12" id="productsListItem">
+                <div class="col-lg-12 product_item_on_product_page">
                     <div class="col-lg-4">
                         {% for image in prod.images.all %}
-                        <img src="{{ image.image.url }}">
+                        <img class="round_corners product_image_on_product_page" src="{{ image.image.url }}">
                         {% endfor %}
                     </div>
                     <div class="col-lg-8">
-                        <h4>{{ prod.product_title|truncatechars:37 }} {% if prod.product_size%}(размер: {{ prod.product_size }}){% endif %}</h4>
-                        <div class="caption">
-                        <p>{{ prod.product_text|truncatechars:230|safe }}</p>
+                        <h4 class="item_header">{{ prod.product_title|truncatechars:37 }} {% if prod.product_size%}(размер: {{ prod.product_size }}){% endif %}</h4>
+                        <div class="caption item_text">
+                        {{ prod.product_text|truncatechars:230|safe }}
                         <p class="price">
                             {% if prod.product_present %}
-                                <span style="color: green"> В наличии, </span>   цена: {{ prod.product_current_price }} грн <a href="{% url 'product' prod.id %}" class="btn btn-primary" role="button">Подробнее</a> <a href="{% url 'add_main' prod.id %}" class="btn btn-success" role="button">Купить</a></p>
+                                <span class="product_available"> В наличии, </span><span class="product_price">цена: {{ prod.product_current_price }} грн </span><a href="{% url 'product' prod.id %}" class="btn btn-primary" role="button">Подробнее</a> <a href="{% url 'add_main' prod.id %}" class="btn btn-success" role="button">Купить</a></p>
                             {% elif prod.product_available_for_order %}
-                                <span style="color: blue"> Под заказ,  </span> цена: {{ prod.product_current_price }} грн <a href="{% url 'product' prod.id %}" class="btn btn-primary" role="button">Подробнее</a> <a href="{% url 'add_main' prod.id %}" class="btn btn-success" role="button">Купить</a></p>
+                                <span class="product_available_for_order"> Под заказ,  </span><span class="product_price"> цена:{{ prod.product_current_price }} грн </span><a href="{% url 'product' prod.id %}" class="btn btn-primary" role="button">Подробнее</a> <a href="{% url 'add_main' prod.id %}" class="btn btn-success" role="button">Купить</a></p>
                             {% else %}
-                                <span style="color: #000000"> Недоступно </span>
+                                <span class="product_unavailable"> Недоступно </span>
                             {% endif %}
-
                         </div>
                     </div>
                 </div>
               {% endfor %}
-            </div>
         {% endif %}
-
-
-
 {% endblock %}

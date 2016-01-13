@@ -1674,7 +1674,7 @@ QUnit.equiv = (function() {
 
 				// - skip when the property is a method of an instance (OOP)
 				// - abort otherwise,
-				// initial === would have catch identical references anyway
+				// initial_data.json === would have catch identical references anyway
 				"function": function() {
 					var caller = callers[callers.length - 1];
 					return caller !== Object && typeof caller !== "undefined";

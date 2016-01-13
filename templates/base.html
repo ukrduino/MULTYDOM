@@ -10,7 +10,7 @@
 
     <!-- Bootstrap -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style_multydom.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'js/navgoco/src/jquery.navgoco.css' %}">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -34,7 +34,7 @@
         <h1 id="topText">MultyDOM - лучшие товары для дома!!!</h1>
         <div class="col-lg-10 col-lg-offset-1" id="baseWindow">
 
-            <ul class="nav nav-tabs nav-justified" >
+            <ul class="nav nav-tabs nav-justified top_panel">
                     <li><a href="{% url 'actions' %}">Акции</a></li>
                     <li><a href="{% url 'categories' %}">Товары</a></li>
                     <li><a href="{% url 'brands' %}">Брэнды</a></li>
@@ -43,10 +43,6 @@
                     <li><a href="{% url 'my_cart' %}">Корзина {% if request.session.cart_qwt_of_prods %} <span class="badge" id="CartBadge"> {{ request.session.cart_qwt_of_prods }}</span>{% endif %}</a></li>
             </ul>
             {% block actions %}{% endblock %}
-            {% block categories %}{% endblock %}
-            {% block brands %}{% endblock %}
-            {% block product %}{% endblock %}
-            {% block products %}{% endblock %}
             {% block docs %}{% endblock %}
             {% block about %}{% endblock %}
             {% block cart %}{% endblock %}
@@ -54,6 +50,7 @@
             {% block order_confirmed %}{% endblock %}
             {% block management %}{% endblock %}
             {% block login %}{% endblock %}
+            {% block left_panel %}{% endblock %}
 
         </div>
     </div>

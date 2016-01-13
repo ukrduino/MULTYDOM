@@ -110,7 +110,7 @@ def cart(request):
 
     # Пример заполнения полей формы из контекста при создании формы
     # cart_cost = request.session.get('cart_cost')
-    # form = OrderForm(initial={'order_sum': cart_cost})
+    # form = OrderForm(initial_data.json={'order_sum': cart_cost})
     # args['form'] = form
 
     return render(request, 'cart.html', args)
