@@ -85,51 +85,12 @@ body {
     margin-top: 100px;
 }
 
+/*-------------------ONE PRODUCT PAGE------------------------------*/
 
 
-#oneProdPanel > p{
-    color: #ffffff ;
-}
-#oneProdPanel{
-    margin: 0 ;
-    text-align: center;
-    color: #C1CAC5;
-    font-size: 14px;
-    background: rgba(67, 23, 14, 0.81);
-    /*background: rgba(92, 0, 6, 0.61);*/
-    padding: 0;
-}
-#oneProdPanel.col-lg-8{
-    margin: 0;
-    padding: 0;
-}
 
-#oneProdPanel > div.col-lg-8 > img{
-    margin: 5px;
-}
 
-#oneProdPanel > div.col-lg-8 > p {
-    text-align: right;
-    margin-right: 40px;
-    color: #6bbbe1;
-    font-size: 20px;
-}
-
-#oneProdPanel > div.col-lg-4 > p {
-    text-align: left;
-}
-
-#oneProdPanel > div.col-lg-4 > h3 {
-    text-align: center;
-    color: #FF7D7D;
-}
-
-#oneProdPanel > div.col-lg-4{
-    padding: 0;
-    margin: 0;
-}
-
-/* Корзина*/
+/*------------------------CART--------------------------------------*/
 
 /*http://fortawesome.github.io/Font-Awesome/*/
 
@@ -273,26 +234,26 @@ input#id_captcha_1.form-control{
 }
 
 /*-------------products page------------------------*/
-.product_item_on_product_page{
+.product_item_on_products_page {
     padding-left: 0px;
     padding-right: 0px;
     padding-top: 2px;
     height: 190px;
 }
 
-.product_item_on_product_page .col-lg-4{
+.product_item_on_products_page .col-lg-4{
     padding: 0;
 }
 
-.product_item_on_product_page .item_header{
+.product_item_on_products_page .item_header{
     color: white;
 }
 
-.product_item_on_product_page .item_text{
+.product_item_on_products_page .item_text{
     color: white;
 }
 
-.product_image_on_product_page{
+.product_image_on_products_page {
     background: rgba(0,0,0,0);
     width: 220px;
     margin: 5%;

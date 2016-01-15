@@ -8,10 +8,10 @@
             </div>
         {% else %}
               {% for prod in products %}
-                <div class="col-lg-12 product_item_on_product_page">
+                <div class="col-lg-12 product_item_on_products_page">
                     <div class="col-lg-4">
                         {% for image in prod.images.all %}
-                        <img class="round_corners product_image_on_product_page" src="{{ image.image.url }}">
+                        <img class="round_corners product_image_on_products_page" src="{{ image.image.url }}">
                         {% endfor %}
                     </div>
                     <div class="col-lg-8">

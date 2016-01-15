@@ -2,15 +2,49 @@
 {% load staticfiles %}
 
 {% block product %}
-        <div class="col-lg-8">
-            <img class="round_corners product_image_on_product_page" src="{{ product.get_original }}" alt="{{ product.productTitle }}">
-            <p class="price">
-                Цена: {{ product.productCurrentPrice }} грн
-                <a href="{% url 'add_main' product.id %}" class="btn btn-success" role="button">Купить</a>
-            </p>
+    <!-- carousel -->
+    <div class="col-lg-8  col-lg-offset-2">
+        <div id="carousel" class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                {% for image in product.images.all %}
+                    {% if forloop.first %}
+                        <li data-target="#carousel" data-slide-to="{{ forloop.counter0 }}" class="active"></li>
+                    {% else %}
+                        <li data-target="#carousel" data-slide-to="{{ forloop.counter0 }}"></li>
+                    {% endif %}
+                {% endfor %}
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner">
+                {% for image in product.images.all %}
+                    {% if forloop.first %}
+                        <div class="item active">
+                            <img src="{{ image.image.url }}">
+                        </div>
+                    {% else %}
+                        <div class="item">
+                            <img src="{{ image.image.url }}">
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <!-- Controls -->
+            <a class="left carousel-control" href="#carousel" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+            </a>
+            <a class="right carousel-control" href="#carousel" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+            </a>
         </div>
-        <div class="col-lg-4">
-            <h3>{{ product.productTitle }}</h3>
-            <p>{{ product.productText|safe }}</p>
-        </div>
+    </div>
+    <p class="price">
+        Цена: {{ product.product_current_price }} грн
+        <a href="{% url 'add_main' product.id %}" class="btn btn-success" role="button">Купить</a>
+    </p>
+    {#    <div class="col-lg-4">#}
+    {#        <h3>{{ product.product_title }}</h3>#}
+    {#    </div>#}
+    {#    {{ product.product_text|safe }}#}
 {% endblock %}
